@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>PMRFS | Register</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="" type="image/x-icon" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img class="img-fluid" src="" alt="" />&emsp;<b>PMRFC</b></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="get" th:action="@{/login}">
+                <button name="" class="btn btn-success" style="color: white" type="submit"><b>User Login</b></button>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <img height="150px" width="150px" src="/images/gov.jpeg" alt="" class="img-thumbnail">
+        <br>
+        <br>
+        <h3><b>Register to Prime Minister Relief Fund Portal</b></h3>
+        <hr>
+    </div>
+    <br>
+    <form class="form-group text-center" method="post"
+          th:action="@{/registered}"
+          th:object="${user}">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="First Name" ty id="firstname" class="form-control" th:field="*{uFirstName}"
+                           required>
+                    <label for="firstname">First Name</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Last Name" id="lastname" class="form-control" th:field="*{uLastName}"
+                           required>
+                    <label for="lastname">Last Name</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Email" name="email" type="email" id="email" class="form-control"
+                           th:field="*{uEmail}"
+                           required>
+                    <label for="email">Email</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Image Url" id="imageurl" class="form-control" th:field="*{uImageUrl}"
+                           required>
+                    <label for="imageurl">Image Url (Google photos link: size 315x315)</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="form-control" style="height: 54px" th:field="*{uCategory}" required>
+                        <option value="0">Select Category</option>
+                        <option value="PMO_PTNT">PMO for Patient</option>
+                        <option value="PMO_VCTM">PMO for Victims</option>
+                        <option value="PMO_PUSR">PMO for Public Services</option>
+                        <option value="Patient">Patient</option>
+                        <option value="Affected Victims">Affected Victims</option>
+                        <option value="Public Services"> Public Services</option>
+                        <option value="CONTRIBUTOR">Contributor</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input type="date" placeholder="Date of Birth" id="dob" class="form-control" th:field="*{uDob}"
+                           required>
+                    <label for= "dob">Date of Birth</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Aadhaar Card Number" type="number" id="aadhaar" class="form-control" th:field="*{uAadhaar}"
+                           required>
+                    <label for= "aadhaar">Aadhaar Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="PAN Card Number" type="text" id="pan" class="form-control" th:field="*{uPan}"
+                           required>
+                    <label for= "pan">PAN Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Phone Number" type="number" id="phone" class="form-control" th:field="*{uPhone}"
+                           required>
+                    <label for= "phone">Phone Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Password" type="password" id="password" class="form-control"
+                           th:field="*{uPassword}"
+                           required>
+                    <label for="password">Password (ex: Sit@2020)
+                    </label>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
+                <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
+            </div>
+            <div class="col-md-12">
+                <br>
+                <button type="submit" class="btn btn-success btn-lg"><b>Sign Up</b></button>
+                <br>
+                <br>
+                <a type="button" class="btn btn-link" href="/login">Already registered? Login</a>
+                <br>
+                <br>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>PMRFS | Income Details</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="" type="image/x-icon" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body>
+
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">-->
+<!--    <div class="container-fluid">-->
+<!--&lt;!&ndash;        <button class="btn btn-outline-info">&ndash;&gt;-->
+<!--&lt;!&ndash;            &lt;!&ndash;            <a class="navbar-brand" th:each="user: ${users}">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            &lt;!&ndash;                <img th:src="@{${member.image_url}}" width="30" height="24" class="d-inline-block align-text-top">&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            &lt;!&ndash;            </a>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>&ndash;&gt;-->
+<!--&lt;!&ndash;        </button>&ndash;&gt;-->
+<!--        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--            <span class="navbar-toggler-icon"></span>-->
+<!--        </button>-->
+<!--        <div class="collapse navbar-collapse" id="navbarSupportedContent">-->
+<!--            <ul class="navbar-nav me-auto mb-2 mb-lg-0">-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/dashboard">My Dashboard</a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/approveFunds"><b>Approve Funds</b></a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/approveFunds"><b>Approve Funds</b></a>-->
+<!--                </li>-->
+<!--                <li class="nav-item">-->
+<!--                    <a class="nav-link" href="/myProfile">My Profile</a>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">-->
+<!--                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</nav>-->
+
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <h3><b>Add Aadhaar Details</b></h3>
+        <hr>
+    </div>
+    <br>
+
+    <form class="form-group text-center" method="post"
+          th:action="@{/addedAadhaarDetails}"
+          th:object="${aadhaar}">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Aadhaar Number" type="text" id="aadhaar" class="form-control" th:field="*{uAadhaar}"
+                           required>
+                    <label for="aadhaar">Aadhaar Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Address" id="address" class="form-control" th:field="*{uAddress}"
+                           required>
+                    <label for="address">Address</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
+                <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
+            </div>
+            <div class="col-md-12">
+                <br>
+                <button type="submit" class="btn btn-success btn-lg"><b>Add</b></button>
+                <br>
+                <br>
+                <br>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+
+</body>
+</html>

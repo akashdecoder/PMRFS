@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>PMRFS | Contribute</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="" type="image/x-icon" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body sec:authorize="hasAnyAuthority('CONTRIBUTOR')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contribute"><b>Contribute</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <img height="150px" width="150px" src="/images/gov.jpeg" alt="" class="img-thumbnail">
+        <br>
+        <br>
+        <h3><b>Fill the details to Contribute</b></h3>
+        <hr>
+    </div>
+    <br>
+    <form class="form-group" method="post"
+          th:action="@{/contributed}"
+          th:object="${contributor}">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="form-control" style="height: 54px" th:field="*{cContributionFor}" required>
+                        <option value="0">Select Category for Contribution</option>
+                        <option value="PMO_PTNT">Medical Service</option>
+                        <option value="PMO_VCTM">Affected Victim Service</option>
+                        <option value="PMO_PUSR">Public Organization Service</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Amount you want to contribute" id="cont" class="form-control" th:field="*{cAmount}"
+                           required>
+                    <label for="cont">Amount you want to contribute</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
+                <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
+            </div>
+            <div class="col-md-12 text-center">
+                <br>
+                <button type="submit" class="btn btn-success btn-lg">Contribute</button>
+                <br>
+                <br>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>PMRFS | Approve Funds</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="" type="image/x-icon" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<!--Prime Minister Office-->
+<body sec:authorize="hasAnyAuthority('PMO_PTNT')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/approveFunds"><b>Approve Funds</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <h3><b>My Profile</b></h3>
+        <hr style="color: black;">
+    </div>
+    <div class="row" th:each="u: ${user}">
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Name: ' + ${u.uFirstName} + ' ' + ${u.uLastName}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Email: ' + ${u.uEmail}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Phone: ' + ${u.uPhone}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Date of Birth: ' + ${u.uDob}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Aadhaar Card Number: ' + ${u.uAadhaar}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Pan Number: ' + ${u.uPan}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Account Address: ' + ${u.uAddress}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Category: ' + ${u.uCategory}"></h2>
+        </div>
+        <br>
+        <br>
+        <div class="col-md-12">
+            <a class="btn btn-primary hvr-bounce-to-top btn-lg"
+               th:href="@{/account/{uId}(uId=${u.uId})}"
+               style="color: whitesmoke;"><b>Update Profile</b></a>
+        </div>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<!--Prime Minister Office-->
+<body sec:authorize="hasAnyAuthority('PMO_PUSR')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/approveFunds"><b>Approve Funds</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <h3><b>My Profile</b></h3>
+        <hr style="color: black;">
+    </div>
+    <div class="row" th:each="u: ${user}">
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Name: ' + ${u.uFirstName} + ' ' + ${u.uLastName}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Email: ' + ${u.uEmail}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Phone: ' + ${u.uPhone}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Date of Birth: ' + ${u.uDob}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Aadhaar Card Number: ' + ${u.uAadhaar}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Pan Number: ' + ${u.uPan}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Account Address: ' + ${u.uAddress}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Category: ' + ${u.uCategory}"></h2>
+        </div>
+        <br>
+        <br>
+        <div class="col-md-12">
+            <a class="btn btn-primary hvr-bounce-to-top btn-lg"
+               th:href="@{/account/{uId}(uId=${u.uId})}"
+               style="color: whitesmoke;"><b>Update Profile</b></a>
+        </div>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<!--Prime Minister Office-->
+<body sec:authorize="hasAnyAuthority('PMO_VCTM')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/approveFunds"><b>Approve Funds</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <h3><b>My Profile</b></h3>
+        <hr style="color: black;">
+    </div>
+    <div class="row" th:each="u: ${user}">
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Name: ' + ${u.uFirstName} + ' ' + ${u.uLastName}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Email: ' + ${u.uEmail}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Phone: ' + ${u.uPhone}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Date of Birth: ' + ${u.uDob}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Aadhaar Card Number: ' + ${u.uAadhaar}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Pan Number: ' + ${u.uPan}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Account Address: ' + ${u.uAddress}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Category: ' + ${u.uCategory}"></h2>
+        </div>
+        <br>
+        <br>
+        <div class="col-md-12">
+            <a class="btn btn-primary hvr-bounce-to-top btn-lg"
+               th:href="@{/account/{uId}(uId=${u.uId})}"
+               style="color: whitesmoke;"><b>Update Profile</b></a>
+        </div>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<!--Patient-->
+<body sec:authorize="hasAnyAuthority('PTNT')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/requestFunds">Fund Request</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/verification"><b>Verification</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <h3><b>My Profile</b></h3>
+        <hr style="color: black;">
+    </div>
+    <div class="row" th:each="u: ${user}">
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Name: ' + ${u.uFirstName} + ' ' + ${u.uLastName}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Email: ' + ${u.uEmail}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Phone: ' + ${u.uPhone}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Date of Birth: ' + ${u.uDob}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Aadhaar Card Number: ' + ${u.uAadhaar}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Pan Number: ' + ${u.uPan}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Account Address: ' + ${u.uAddress}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Category: ' + ${u.uCategory}"></h2>
+        </div>
+        <br>
+        <br>
+        <div class="col-md-12">
+            <a class="btn btn-primary hvr-bounce-to-top btn-lg"
+               th:href="@{/account/{uId}(uId=${u.uId})}"
+               style="color: whitesmoke;"><b>Update Profile</b></a>
+        </div>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+<!--Public services-->
+<body sec:authorize="hasAnyAuthority('PUSR')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard"><b>My Dashboard</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/requestFunds">Fund Request</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/verification">Verification</a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <h3><b>My Profile</b></h3>
+        <hr style="color: black;">
+    </div>
+    <div class="row" th:each="u: ${user}">
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Name: ' + ${u.uFirstName} + ' ' + ${u.uLastName}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Email: ' + ${u.uEmail}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Phone: ' + ${u.uPhone}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Date of Birth: ' + ${u.uDob}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Aadhaar Card Number: ' + ${u.uAadhaar}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Pan Number: ' + ${u.uPan}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Account Address: ' + ${u.uAddress}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Category: ' + ${u.uCategory}"></h2>
+        </div>
+        <br>
+        <br>
+        <div class="col-md-12">
+            <a class="btn btn-primary hvr-bounce-to-top btn-lg"
+               th:href="@{/account/{uId}(uId=${u.uId})}"
+               style="color: whitesmoke;"><b>Update Profile</b></a>
+        </div>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+<!--Victim-->
+<body sec:authorize="hasAnyAuthority('VCTM')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/requestFunds">Fund Request</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/verification"><b>Verification</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <h3><b>My Profile</b></h3>
+        <hr style="color: black;">
+    </div>
+    <div class="row" th:each="u: ${user}">
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Name: ' + ${u.uFirstName} + ' ' + ${u.uLastName}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Email: ' + ${u.uEmail}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Phone: ' + ${u.uPhone}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Date of Birth: ' + ${u.uDob}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Aadhaar Card Number: ' + ${u.uAadhaar}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Pan Number: ' + ${u.uPan}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Account Address: ' + ${u.uAddress}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Category: ' + ${u.uCategory}"></h2>
+        </div>
+        <br>
+        <br>
+        <div class="col-md-12">
+            <a class="btn btn-primary hvr-bounce-to-top btn-lg"
+               th:href="@{/account/{uId}(uId=${u.uId})}"
+               style="color: whitesmoke;"><b>Update Profile</b></a>
+        </div>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<!--Victim-->
+<body sec:authorize="hasAnyAuthority('CONTRIBUTOR')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/contribute"><b>Contribute</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <h3><b>My Profile</b></h3>
+        <hr style="color: black;">
+    </div>
+    <div class="row" th:each="u: ${user}">
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Name: ' + ${u.uFirstName} + ' ' + ${u.uLastName}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Email: ' + ${u.uEmail}"></h2>
+        </div>
+        <div  class="col-md-12">
+            <h2 style="color: black" th:text="'Phone: ' + ${u.uPhone}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Date of Birth: ' + ${u.uDob}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Aadhaar Card Number: ' + ${u.uAadhaar}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Pan Number: ' + ${u.uPan}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Account Address: ' + ${u.uAddress}"></h2>
+        </div>
+        <div class="col-md-12">
+            <h2 style="color: black" th:text="'Category: ' + ${u.uCategory}"></h2>
+        </div>
+        <br>
+        <br>
+        <div class="col-md-12">
+            <a class="btn btn-primary hvr-bounce-to-top btn-lg"
+               th:href="@{/account/{uId}(uId=${u.uId})}"
+               style="color: whitesmoke;"><b>Update Profile</b></a>
+        </div>
+        <br>
+        <br>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>

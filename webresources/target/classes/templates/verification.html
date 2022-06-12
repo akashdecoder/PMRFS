@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+    <meta charset="UTF-8">
+    <title>PMRFS | Verification</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="" type="image/x-icon" >
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+</head>
+<body sec:authorize="hasAnyAuthority('PTNT')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/requestFunds">Fund Request</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/verification"><b>Verification</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <img height="150px" width="150px" src="/images/gov.jpeg" alt="" class="img-thumbnail">
+        <br>
+        <br>
+        <h3><b>Fill the details for Verification</b></h3>
+        <hr>
+    </div>
+    <br>
+    <form class="form-group" method="post"
+          th:action="@{/verified_ptnt}"
+          th:object="${patient}"
+          enctype="multipart/form-data">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Aadhaar Card Number" id="aadhaar" class="form-control" th:field="*{pAadhaar}"
+                           required>
+                    <label for="aadhaar">Aadhaar Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="PAN Card Number" id="pan" class="form-control" th:field="*{pPan}"
+                           required>
+                    <label for="pan">PAN Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Occupation" name="occupation" type="text" id="occupation" class="form-control"
+                           th:field="*{pOccupation}"
+                           required>
+                    <label for="occupation">Occupation</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Hospital Fund Request Id" type="text" id="requestId" class="form-control" th:field="*{pHospitalFundRequestId}"
+                           required>
+                    <label for= "requestId">Hospital Fund Request Id</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Hospital Fund Need" type="number" id="fund" class="form-control" th:field="*{pFundNeed}"
+                           required>
+                    <label for= "fund">Hospital Fund Need</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="form-control" style="height: 54px" th:field="*{pCaseType}" required>
+                        <option value="0">Select Case Type</option>
+                        <option value="CANCER">Cancer</option>
+                        <option value="NEURO">Neurological</option>
+                        <option value="Heart">Heart</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Income Id" type="text" id="incomeId" class="form-control" th:field="*{pIncomeId}"
+                           required>
+                    <label for= "incomeId">Income Id</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
+                <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
+            </div>
+            <div class="col-md-12 text-center">
+                <br>
+                <button type="submit" class="btn btn-success btn-lg" th:disabled="${disable}" th:text="${buttonText}"></button>
+                <br>
+                <br>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<body sec:authorize="hasAnyAuthority('PUSR')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/requestFunds">Fund Request</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/verification"><b>Verification</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <img height="150px" width="150px" src="/images/gov.jpeg" alt="" class="img-thumbnail">
+        <br>
+        <br>
+        <h3><b>Fill the details for Verification</b></h3>
+        <hr>
+    </div>
+    <br>
+    <form class="form-group" method="post"
+          th:action="@{/verified_pusr}"
+          th:object="${pusr}">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Aadhaar Card Number" id="aadhaar1" class="form-control" th:field="*{pUAadhaar}"
+                           required>
+                    <label for="aadhaar1">Aadhaar Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="PAN Card Number" id="pan1" class="form-control" th:field="*{pUPan}"
+                           required>
+                    <label for="pan1">PAN Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="form-control" style="height: 54px" th:field="*{pUServiceType}" required>
+                        <option value="0">Select Service Type</option>
+                        <option value="Public Laboratories">Public Laboratories</option>
+                        <option value="Hospital&Dispensaries">Hospital&Dispensaries</option>
+                        <option value="Educational Institutes">Educational Institutes</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Number of Employees" name="employees" type="number" id="employees" class="form-control"
+                           th:field="*{pUEmployees}"
+                           required>
+                    <label for="employees">Number of Employees</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Expected Fund Need" type="number" id="eFund" class="form-control" th:field="*{pUFundNeed}"
+                           required>
+                    <label for= "eFund">Expected Fund Need</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Official Consent Id" id="consentID" class="form-control" th:field="*{pUOfficialConsentId}"
+                           required>
+                    <label for="consentId">Official Consent Id</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
+                <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
+            </div>
+            <div class="col-md-12 text-center">
+                <br>
+                <button type="submit" class="btn btn-success btn-lg" th:disabled="${disable}" th:text="${buttonText}"></button>
+                <br>
+                <br>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<body sec:authorize="hasAnyAuthority('VCTM')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/requestFunds">Fund Request</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/verification"><b>Verification</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <br>
+    <br>
+    <br>
+    <div class="section-title text-center">
+        <img height="150px" width="150px" src="/images/gov.jpeg" alt="" class="img-thumbnail">
+        <br>
+        <br>
+        <h3><b>Fill the details for Verification</b></h3>
+        <hr>
+    </div>
+    <br>
+    <form class="form-group" method="post"
+          th:action="@{/verified_vctm}"
+          th:object="${vctm}"
+          enctype="multipart/form-data">
+        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
+        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Aadhaar Card Number" id="aadhaar2" class="form-control" th:field="*{vAadhaar}"
+                           required>
+                    <label for="aadhaar2">Aadhaar Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="PAN Card Number" id="pan2" class="form-control" th:field="*{vPan}"
+                           required>
+                    <label for="pan2">PAN Card Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="form-control" style="height: 54px" th:field="*{vCaseType}" required>
+                        <option value="0">Select Case Type</option>
+                        <option value="Accident">Accident</option>
+                        <option value="Flood Damage">Flood Damage</option>
+                        <option value="Earthquake Damage">Earthquake Damage</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Hospital Fund Request Id" type="text" id="rId" class="form-control" th:field="*{vOrganizationId}"
+                           required>
+                    <label for= "rId">Fund Request Id</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Expected Fund Need" type="number" id="vFund" class="form-control" th:field="*{vFundNeed}"
+                           required>
+                    <label for= "vFund">Expected Fund Need</label>
+                </div>
+            </div>
+            <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
+                <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
+            </div>
+            <div class="col-md-12 text-center">
+                <br>
+                <button type="submit" class="btn btn-success btn-lg" th:disabled="${disable}" th:text="${buttonText}"></button>
+                <br>
+                <br>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+</html>
