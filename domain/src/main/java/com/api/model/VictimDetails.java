@@ -38,4 +38,7 @@ public class VictimDetails {
     @Column(nullable = false, columnDefinition = "int default 0")
     private @Getter @Setter int vAttempts;
 
+    @Column(nullable = false)
+    private @Getter @Setter String uApproveStatus;
+
 }

@@ -11,6 +11,49 @@
       <change beforePath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/TEST-org.blockchain.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/TEST-org.blockchain.AppTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" beforeDir="false" afterPath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/ContributorDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/ContributorDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/PMOFundHistory.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/PMOFundHistory.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/PatientDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/PatientDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/PublicServiceDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/PublicServiceDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/UsersFunds.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/UsersFunds.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/VictimDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/VictimDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/PatientDetailsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/PatientDetailsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/PublicServiceDetailsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/PublicServiceDetailsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/UsersFundsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/UsersFundsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/VictimDetailsRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/VictimDetailsRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/ContributorDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/ContributorDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/PMOFundHistory.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/PMOFundHistory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/PublicServiceDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/PublicServiceDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/UsersFunds.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/UsersFunds.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/VictimDetails.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/VictimDetails.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/repository/PatientDetailsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/repository/PatientDetailsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/repository/PublicServiceDetailsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/repository/PublicServiceDetailsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UsersFundsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UsersFundsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/repository/VictimDetailsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/repository/VictimDetailsRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/MailScheduler.class" beforeDir="false" afterPath="$PROJECT_DIR$/utils/target/classes/com/api/MailScheduler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/App.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_contributions.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_contributions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/contribute.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/contribute.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/organization_request_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/organization_request_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/pmo_approve.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/pmo_approve.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/update_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/userprofile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/userprofile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/verification.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/verification.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/all_contributions.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/all_contributions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/contribute.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/contribute.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/organization_request_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/organization_request_list.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/pmo_approve.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/pmo_approve.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/update_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/userprofile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/userprofile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/verification.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/verification.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,14 +64,14 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Solidity Contract" />
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
         <option value="HTML File" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitSEFilterConfiguration">
     <file-type-list>

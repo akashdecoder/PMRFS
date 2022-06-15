@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -35,5 +36,10 @@ public class UsersFunds {
     @Column(nullable = true)
     private @Getter @Setter String uTransactionHash;
 
+    @Column(nullable = false)
+    private @Getter @Setter Timestamp uRequestTimestamp;
+
+    @Column(nullable = true)
+    private @Getter @Setter Timestamp uApprovedTimestamp;
 
 }

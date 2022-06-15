@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "contributor_details")
@@ -28,4 +29,7 @@ public class ContributorDetails {
 
     @Column(nullable = false)
     private @Getter @Setter String cAmount;
+
+    @Column(nullable = false)
+    private @Getter @Setter Timestamp cContributionTimestamp;
 }

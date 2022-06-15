@@ -25,4 +25,7 @@ public interface PublicServiceDetailsRepository extends JpaRepository<PublicServ
 
     @Query("select p from PublicServiceDetails p where p.uApproveStatus = ?1")
     public PublicServiceDetails findPublicServiceByApprovedStatus(String status);
+
+    @Query("select p from PublicServiceDetails p where p.uId = ?1 and p.uApproveStatus = ?2")
+    public PublicServiceDetails findPublicServiceDetailsByUIdAndApproveStatus(Long uId, String status);
 }

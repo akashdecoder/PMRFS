@@ -9,7 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = {"com.api.repository"})
 @EntityScan(basePackages = {"com.api.model"})
-@EnableScheduling
+//@EnableScheduling
 public class App {
     public static void main(String[] args) {
         SpringApplication.run(App.class);

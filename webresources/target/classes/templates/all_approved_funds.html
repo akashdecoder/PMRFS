@@ -1,15 +1,252 @@
 <!DOCTYPE html>
+<html lang="en">
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
-    <title>PMRFC | My Dashboard</title>
+    <meta charset="UTF-8">
+    <title>PMRFS | Approved Funds</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="shortcut icon" href="" type="image/x-icon" >
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
+<!--Prime Minister Office-->
+<body sec:authorize="hasAnyAuthority('PMO_PTNT')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/approveFunds">Approve Funds</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allApprovedFunds"><b>All Approved Funds</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="section wb">
+    <div class="container">
+        <div class="section-title text-center">
+            <h1>Contributions</h1>
+            <hr>
+        </div>
+        <br>
+        <br>
+        <div class="table-responsive">
+            <table  class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Reason</th>
+                    <th>Requested Timestamp</th>
+                    <th>Approved Timestamp</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="" th:each="uf: ${users_funds_lists}">
+                    <td style="color: black" th:text="${uf.uId}"></td>
+                    <td style="color: black" th:text="${uf.uFirstName}"></td>
+                    <td style="color: black" th:text="${uf.uFundsHistory}"></td>
+                    <td style="color: black" th:text="${uf.uReason}"></td>
+                    <td style="color: black" th:text="${uf.uRequestTimestamp}"></td>
+                    <td style="color: black" th:text="${uf.uApprovedTimestamp}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<!--Prime Minister Office-->
+<body sec:authorize="hasAnyAuthority('PMO_PUSR')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/approveFunds">Approve Funds</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allApprovedFunds"><b>All Approved Funds</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="section wb">
+    <div class="container">
+        <div class="section-title text-center">
+            <h1>Contributions</h1>
+            <hr>
+        </div>
+        <br>
+        <br>
+        <div class="table-responsive">
+            <table  class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Reason</th>
+                    <th>Requested Timestamp</th>
+                    <th>Approved Timestamp</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="" th:each="uf: ${users_funds_lists}">
+                    <td style="color: black" th:text="${uf.uId}"></td>
+                    <td style="color: black" th:text="${uf.uFirstName}"></td>
+                    <td style="color: black" th:text="${uf.uFundsHistory}"></td>
+                    <td style="color: black" th:text="${uf.uReason}"></td>
+                    <td style="color: black" th:text="${uf.uRequestTimestamp}"></td>
+                    <td style="color: black" th:text="${uf.uApprovedTimestamp}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
+
+<!--Prime Minister Office-->
+<body sec:authorize="hasAnyAuthority('PMO_VCTM')">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container-fluid">
+        <button class="btn btn-outline-info">
+            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
+        </button>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">My Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/approveFunds">Approve Funds</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/myProfile">My Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allApprovedFunds"><b>All Approved Funds</b></a>
+                </li>
+            </ul>
+            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
+                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
+            </form>
+        </div>
+    </div>
+</nav>
+<br>
+<br>
+<br>
+<br>
+<div class="section wb">
+    <div class="container">
+        <div class="section-title text-center">
+            <h1>Contributions</h1>
+            <hr>
+        </div>
+        <br>
+        <br>
+        <div class="table-responsive">
+            <table  class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Reason</th>
+                    <th>Requested Timestamp</th>
+                    <th>Approved Timestamp</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr class="" th:each="uf: ${users_funds_lists}">
+                    <td style="color: black" th:text="${uf.uId}"></td>
+                    <td style="color: black" th:text="${uf.uFirstName}"></td>
+                    <td style="color: black" th:text="${uf.uFundsHistory}"></td>
+                    <td style="color: black" th:text="${uf.uReason}"></td>
+                    <td style="color: black" th:text="${uf.uRequestTimestamp}"></td>
+                    <td style="color: black" th:text="${uf.uApprovedTimestamp}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+</body>
 <!--Patient-->
 <body sec:authorize="hasAnyAuthority('PTNT')">
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
@@ -40,6 +277,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allApprovedFunds"><b>All Approved Funds</b></a>
+                </li>
             </ul>
             <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
                 <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
@@ -54,27 +294,31 @@
 <div class="section wb">
     <div class="container">
         <div class="section-title text-center">
-            <h3><b>Organization Requests</b></h3>
+            <h1>Contributions</h1>
             <hr>
         </div>
-        <br>
-        <br>
-        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
-        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
         <br>
         <br>
         <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
-                    <th>Request Id</th>
-                    <th>Amount Requested</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Reason</th>
+                    <th>Requested Timestamp</th>
+                    <th>Approved Timestamp</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="" th:each="request: ${requests}">
-                    <td style="color: black" th:text="${request.oRequestId}"></td>
-                    <td style="color: black" th:text="${request.oAmount}"></td>
+                <tr class="" th:each="uf: ${users_funds_lists}">
+                    <td style="color: black" th:text="${uf.uId}"></td>
+                    <td style="color: black" th:text="${uf.uFirstName}"></td>
+                    <td style="color: black" th:text="${uf.uFundsHistory}"></td>
+                    <td style="color: black" th:text="${uf.uReason}"></td>
+                    <td style="color: black" th:text="${uf.uRequestTimestamp}"></td>
+                    <td style="color: black" th:text="${uf.uApprovedTimestamp}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -84,7 +328,9 @@
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </body>
-<!--Public services-->
+
+
+<!--Patient-->
 <body sec:authorize="hasAnyAuthority('PUSR')">
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
@@ -94,7 +340,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="/dashboard">My Dashboard</a>
@@ -114,6 +360,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/allApprovedFunds"><b>All Approved Funds</b></a>
+                </li>
             </ul>
             <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
                 <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
@@ -128,27 +377,31 @@
 <div class="section wb">
     <div class="container">
         <div class="section-title text-center">
-            <h3><b>Organization Requests</b></h3>
+            <h1>Contributions</h1>
             <hr>
         </div>
-        <br>
-        <br>
-        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
-        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
         <br>
         <br>
         <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
-                    <th>Request Id</th>
-                    <th>Amount Requested</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Reason</th>
+                    <th>Requested Timestamp</th>
+                    <th>Approved Timestamp</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="" th:each="request: ${requests}">
-                    <td style="color: black" th:text="${request.oRequestId}"></td>
-                    <td style="color: black" th:text="${request.oAmount}"></td>
+                <tr class="" th:each="uf: ${users_funds_lists}">
+                    <td style="color: black" th:text="${uf.uId}"></td>
+                    <td style="color: black" th:text="${uf.uFirstName}"></td>
+                    <td style="color: black" th:text="${uf.uFundsHistory}"></td>
+                    <td style="color: black" th:text="${uf.uReason}"></td>
+                    <td style="color: black" th:text="${uf.uRequestTimestamp}"></td>
+                    <td style="color: black" th:text="${uf.uApprovedTimestamp}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -158,7 +411,9 @@
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 </body>
-<!--Victim-->
+
+
+<!--Patient-->
 <body sec:authorize="hasAnyAuthority('VCTM')">
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
@@ -168,7 +423,7 @@
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
                     <a class="nav-link" href="/dashboard">My Dashboard</a>
@@ -188,73 +443,8 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/allContributions"><b>All Contributions</b></a>
                 </li>
-            </ul>
-            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
-                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
-            </form>
-        </div>
-    </div>
-</nav>
-<br>
-<br>
-<br>
-<br>
-<div class="section wb">
-    <div class="container">
-        <div class="section-title text-center">
-            <h3><b>Organization Requests</b></h3>
-            <hr>
-        </div>
-        <br>
-        <br>
-        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
-        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
-        <br>
-        <br>
-        <div class="table-responsive">
-            <table  class="table table-striped table-bordered">
-                <thead class="thead-dark">
-                <tr>
-                    <th>Request Id</th>
-                    <th>Amount Requested</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="" th:each="request: ${requests}">
-                    <td style="color: black" th:text="${request.oRequestId}"></td>
-                    <td style="color: black" th:text="${request.oAmount}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-</body>
-<!--Prime Minister Office-->
-<body sec:authorize="hasAnyAuthority('PMO_PTNT')">
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <div class="container-fluid">
-        <button class="btn btn-outline-info">
-            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
-        </button>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">My Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/approveFunds">Approve Funds</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/myProfile">My Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
+                    <a class="nav-link" href="/allApprovedFunds"><b>All Approved Funds</b></a>
                 </li>
             </ul>
             <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
@@ -270,167 +460,31 @@
 <div class="section wb">
     <div class="container">
         <div class="section-title text-center">
-            <h3><b>Organization Requests</b></h3>
+            <h1>Contributions</h1>
             <hr>
         </div>
-        <br>
-        <br>
-        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
-        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
         <br>
         <br>
         <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
-                    <th>Request Id</th>
-                    <th>Amount Requested</th>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Amount</th>
+                    <th>Reason</th>
+                    <th>Requested Timestamp</th>
+                    <th>Approved Timestamp</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="" th:each="request: ${requests}">
-                    <td style="color: black" th:text="${request.oRequestId}"></td>
-                    <td style="color: black" th:text="${request.oAmount}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-</body>
-
-
-<!--Prime Minister Office-->
-<body sec:authorize="hasAnyAuthority('PMO_PUSR')">
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <div class="container-fluid">
-        <button class="btn btn-outline-info">
-            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
-        </button>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">My Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/approveFunds">Approve Funds</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/myProfile">My Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
-                </li>
-            </ul>
-            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
-                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
-            </form>
-        </div>
-    </div>
-</nav>
-<br>
-<br>
-<br>
-<br>
-<div class="section wb">
-    <div class="container">
-        <div class="section-title text-center">
-            <h3><b>Organization Requests</b></h3>
-            <hr>
-        </div>
-        <br>
-        <br>
-        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
-        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
-        <br>
-        <br>
-        <div class="table-responsive">
-            <table  class="table table-striped table-bordered">
-                <thead class="thead-dark">
-                <tr>
-                    <th>Request Id</th>
-                    <th>Amount Requested</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="" th:each="request: ${requests}">
-                    <td style="color: black" th:text="${request.oRequestId}"></td>
-                    <td style="color: black" th:text="${request.oAmount}"></td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
-</body>
-
-
-<!--Prime Minister Office-->
-<body sec:authorize="hasAnyAuthority('PMO_VCTM')">
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <div class="container-fluid">
-        <button class="btn btn-outline-info">
-            <a class="navbar-brand" href="#"><b><b sec:authentication="principal.fullName"></b></b></a>
-        </button>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link" href="/dashboard">My Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/approveFunds">Approve Funds</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/myProfile">My Profile</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
-                </li>
-            </ul>
-            <form class="d-flex" name="logoutForm" th:hidden="true" method="post" th:action="@{/logged_out}">
-                <input name="" class="btn btn-outline-danger" type="submit" value="Logout"></input>
-            </form>
-        </div>
-    </div>
-</nav>
-<br>
-<br>
-<br>
-<br>
-<div class="section wb">
-    <div class="container">
-        <div class="section-title text-center">
-            <h3><b>Organization Requests</b></h3>
-            <hr>
-        </div>
-        <br>
-        <br>
-        <div th:if="${warning != null}" class="alert alert-danger text-center">[[${warning}]]</div>
-        <div th:if="${message != null}" class="alert alert-success text-center">[[${message}]]</div>
-        <br>
-        <br>
-        <div class="table-responsive">
-            <table  class="table table-striped table-bordered">
-                <thead class="thead-dark">
-                <tr>
-                    <th>Request Id</th>
-                    <th>Amount Requested</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr class="" th:each="request: ${requests}">
-                    <td style="color: black" th:text="${request.oRequestId}"></td>
-                    <td style="color: black" th:text="${request.oAmount}"></td>
+                <tr class="" th:each="uf: ${users_funds_lists}">
+                    <td style="color: black" th:text="${uf.uId}"></td>
+                    <td style="color: black" th:text="${uf.uFirstName}"></td>
+                    <td style="color: black" th:text="${uf.uFundsHistory}"></td>
+                    <td style="color: black" th:text="${uf.uReason}"></td>
+                    <td style="color: black" th:text="${uf.uRequestTimestamp}"></td>
+                    <td style="color: black" th:text="${uf.uApprovedTimestamp}"></td>
                 </tr>
                 </tbody>
             </table>

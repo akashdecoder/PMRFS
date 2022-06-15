@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "pmo_fund_history")
@@ -28,5 +29,11 @@ public class PMOFundHistory {
 
     @Column(nullable = false)
     private @Getter @Setter String pFApprovedFundStatus;
+
+    @Column(nullable = false)
+    private @Getter @Setter Timestamp uRequestTimestamp;
+
+    @Column(nullable = true)
+    private @Getter @Setter Timestamp uApprovedTimestamp;
 
 }

@@ -25,4 +25,7 @@ public interface PatientDetailsRepository extends JpaRepository<PatientDetails, 
 
     @Query("select p from PatientDetails p where p.uApproveStatus = ?1")
     public PatientDetails findPatientByApprovedStatus(String status);
+
+    @Query("select p from PatientDetails p where p.uId = ?1 and p.uApproveStatus = ?2")
+    public PatientDetails findPatientDetailsByUIdAndApproveStatus(Long uId, String status);
 }

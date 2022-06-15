@@ -20,6 +20,8 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -134,7 +136,9 @@ public class GetResource {
     public String approveRequest(@PathVariable("uId") Long uId, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) throws Exception {
         User u = userRepository.getById(uId);
         User admin = userRepository.findByEmail(loggedMember.getUsername());
+        UsersFunds uf = usersFundsRepository.findByApprovedStatusAndUid(0, uId);
         PMOFundHistory pmoFundHistory = new PMOFundHistory();
+        Timestamp timestamp = Timestamp.from(Instant.now());
         if(u.getUCurrentOutstandingAmount() == null) {
             u.setUCurrentOutstandingAmount("0");
         }
@@ -149,10 +153,20 @@ public class GetResource {
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
         Credentials credentials = web3jClient.getCredentialsFromPrivateKey(admin.getUPrivateKey());
         web3jClient.transferEthereum(web3j, credentials, u.getUAddress(), amountRequested);
+        if(u.getUCategory().equals("Patient")) {
+            PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(u.getUId(), "0");
+            patientDetailsRepository.updatePatientDetails("1", patient.getPId());
+        } else if(u.getUCategory().equals("Public Services")) {
+            PublicServiceDetails publicService = publicServiceDetailsRepository.findPublicServiceDetailsByUIdAndApproveStatus(u.getUId(), "0");
+            publicServiceDetailsRepository.updatePublicServiceDetails("1", publicService.getPUId());
+        } else if(u.getUCategory().equals("Affected Victims")) {
+            VictimDetails victim = victimDetailsRepository.findVictimDetailsByUIdAndApproveStatus(u.getUId(), "0");
+            victimDetailsRepository.updateVictimDetails("1", victim.getVId());
+        }
         userRepository.updateUserApprovedStatus("1", u.getUEmail());
         u.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, u.getUAddress()))));
         userRepository.updateUserFunds(u.getUCurrentOutstandingAmount(), null, null, u.getUId());
-        usersFundsRepository.updateUserFunds(1, u.getUId());
+        usersFundsRepository.updateUserFunds(1, timestamp, u.getUId(), 0);
         admin.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, admin.getUAddress()))));
         userRepository.updateUserFunds(admin.getUCurrentOutstandingAmount(), null, null, admin.getUId());
         userRepository.updateUserDisableVerification("0", uId);
@@ -160,6 +174,8 @@ public class GetResource {
         pmoFundHistory.setPFApprovedAmount(Long.toString(amountRequested));
         pmoFundHistory.setPFApprovedFundReason(u.getURequestReason());
         pmoFundHistory.setPFApprovedFundStatus("1");
+        pmoFundHistory.setURequestTimestamp(uf.getURequestTimestamp());
+        pmoFundHistory.setUApprovedTimestamp(timestamp);
         mailService.sendMail("Fund Approved", u.getURequestReason(), Long.toString(amountRequested), u.getUEmail());
         pmoFundHistoryRepository.save(pmoFundHistory);
         return "redirect:/dashboard";
@@ -233,26 +249,17 @@ public class GetResource {
 
     @GetMapping("/allContributions")
     public String getAllContributions(Model model) {
-        model.addAttribute("contribution_lists", contributorDetailsRepository);
+        model.addAttribute("contributions_lists", contributorDetailsRepository.findAll() );
 //        model.addAttribute("contributions_lists_ptnt", contributorDetailsRepository.findAllByContributionFor("PMO_PTNT"));
 //        model.addAttribute("contributions_lists_pusr", contributorDetailsRepository.findAllByContributionFor("PMO_PUSR"));
 //        model.addAttribute("contributions_lists_vctm", contributorDetailsRepository.findAllByContributionFor("PMO_VCTM"));
         return "all_contributions.html";
     }
 
-    @GetMapping("/allPatientDetails")
-    public List<PatientDetails> getPatientDetails() {
-        return patientDetailsRepository.findAll();
-    }
-
-    @GetMapping("/allVictimDetails")
-    public List<VictimDetails> getVictimDetails() {
-        return victimDetailsRepository.findAll();
-    }
-
-    @GetMapping("/allPublicServiceDetails")
-    public List<PublicServiceDetails> getPublicServiceDetails() {
-        return publicServiceDetailsRepository.findAll();
+    @GetMapping("/allApprovedFunds")
+    public String getAllApprovedFunds(Model model) {
+        model.addAttribute("users_funds_lists", usersFundsRepository.findAllByApprovedStatus(1));
+        return "all_approved_funds.html";
     }
 }
 

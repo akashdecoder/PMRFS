@@ -40,4 +40,7 @@ public class PublicServiceDetails {
 
     @Column(nullable = false, columnDefinition = "int default 0")
     private @Getter @Setter int pAttempts;
+
+    @Column(nullable = false)
+    private @Getter @Setter String uApproveStatus;
 }

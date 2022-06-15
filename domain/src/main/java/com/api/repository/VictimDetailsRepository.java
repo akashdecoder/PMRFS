@@ -1,6 +1,5 @@
 package com.api.repository;
 
-import com.api.model.PatientDetails;
 import com.api.model.VictimDetails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -26,4 +25,7 @@ public interface VictimDetailsRepository extends JpaRepository<VictimDetails, Lo
 
     @Query("select v from VictimDetails v where v.uApproveStatus = ?1")
     public VictimDetails findVictimByApprovedStatus(String status);
+
+    @Query("select v from VictimDetails v where v.uId = ?1 and v.uApproveStatus = ?2")
+    public VictimDetails findVictimDetailsByUIdAndApproveStatus(Long uId, String status);
 }

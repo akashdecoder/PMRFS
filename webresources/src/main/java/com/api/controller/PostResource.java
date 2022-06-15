@@ -17,6 +17,8 @@ import org.web3j.protocol.http.HttpService;
 
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -176,6 +178,7 @@ public class PostResource {
     public String verifyPatientDetails(@Valid PatientDetails patientDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
         String pmEmail = "";
         String email = loggedUser.getUsername();
+        Timestamp timestamp = Timestamp.from(Instant.now());
         User user = userRepository.findByEmail(email);
         List<User> users = userRepository.findAll();
         UsersFunds usersFunds = new UsersFunds();
@@ -191,12 +194,15 @@ public class PostResource {
         }
         if(validationService.isValidPatientRequest(patientDetails)) {
             userRepository.updateUserApprovedStatus("0", email);
+            patientDetails.setUApproveStatus("0");
             patientDetailsRepository.save(patientDetails);
             usersFunds.setUFirstName(user.getUFirstName());
             user.setUCurrentRequestedAmount(usersFunds.getUFundsHistory());
             usersFunds.setUId(user.getUId());
             usersFunds.setUFundsHistory(patientDetails.getPFundNeed());
             usersFunds.setUReason(patientDetails.getPCaseType());
+            usersFunds.setURequestTimestamp(timestamp);
+            usersFunds.setUIsApproved(0);
             usersFundsRepository.save(usersFunds);
             userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), patientDetails.getPFundNeed(), patientDetails.getPCaseType(), patientDetails.getUId());
             userRepository.updateUserDisableVerification("1", user.getUId());
@@ -212,6 +218,7 @@ public class PostResource {
     public String verifyVictimDetails(@Valid VictimDetails victimDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
         String pmEmail = "";
         String email = loggedUser.getUsername();
+        Timestamp timestamp = Timestamp.from(Instant.now());
         User user = userRepository.findByEmail(email);
         List<User> users = userRepository.findAll();
         UsersFunds usersFunds = new UsersFunds();
@@ -223,12 +230,15 @@ public class PostResource {
         }
         if(validationService.isValidVictimRequest(victimDetails)) {
             userRepository.updateUserApprovedStatus("0", email);
+            victimDetails.setUApproveStatus("0");
             victimDetailsRepository.save(victimDetails);
             usersFunds.setUFirstName(user.getUFirstName());
             user.setUCurrentRequestedAmount(usersFunds.getUFundsHistory());
             usersFunds.setUId(user.getUId());
             usersFunds.setUFundsHistory(victimDetails.getVFundNeed());
             usersFunds.setUReason(victimDetails.getVCaseType());
+            usersFunds.setURequestTimestamp(timestamp);
+            usersFunds.setUIsApproved(0);
             usersFundsRepository.save(usersFunds);
             userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), victimDetails.getVFundNeed(), victimDetails.getVCaseType(), victimDetails.getUId());
             userRepository.updateUserDisableVerification("1", user.getUId());
@@ -244,6 +254,7 @@ public class PostResource {
     public String verifyPublicServiceDetails(@Valid PublicServiceDetails publicServiceDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
         String pmEmail = "";
         String email = loggedUser.getUsername();
+        Timestamp timestamp = Timestamp.from(Instant.now());
         User user = userRepository.findByEmail(email);
         List<User> users = userRepository.findAll();
         UsersFunds usersFunds = new UsersFunds();
@@ -255,12 +266,15 @@ public class PostResource {
         }
         if(validationService.isValidPUSRRequest(publicServiceDetails)) {
             userRepository.updateUserApprovedStatus("0", email);
+            publicServiceDetails.setUApproveStatus("0");
             publicServiceDetailsRepository.save(publicServiceDetails);
             usersFunds.setUFirstName(user.getUFirstName());
             user.setUCurrentRequestedAmount(usersFunds.getUFundsHistory());
             usersFunds.setUId(user.getUId());
             usersFunds.setUFundsHistory(publicServiceDetails.getPUFundNeed());
             usersFunds.setUReason(publicServiceDetails.getPUServiceType());
+            usersFunds.setURequestTimestamp(timestamp);
+            usersFunds.setUIsApproved(0);
             usersFundsRepository.save(usersFunds);
             userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), publicServiceDetails.getPUFundNeed(), publicServiceDetails.getPUServiceType(), publicServiceDetails.getUId());
             userRepository.updateUserDisableVerification("1", user.getUId());
@@ -293,11 +307,14 @@ public class PostResource {
         String email = loggedUser.getUsername();
         User user = userRepository.findByEmail(email);
         User pmo = new User();
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        System.out.println(timestamp);
         if(Integer.parseInt(contributorDetails.getCAmount()) <= Integer.parseInt(user.getUCurrentOutstandingAmount())) {
             Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
             Credentials credentials = web3jClient.getCredentialsFromPrivateKey(user.getUPrivateKey());
             contributorDetails.setCName(user.getUFirstName() + " " + user.getULastName());
             contributorDetails.setCAddress(user.getUAddress());
+            contributorDetails.setCContributionTimestamp(timestamp);
             try {
                 if(contributorDetails.getCContributionFor().equals("PMO_PTNT")) {
                     pmo = userRepository.findUserByCategory("PMO_PTNT");
