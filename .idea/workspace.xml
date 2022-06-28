@@ -12,56 +12,15 @@
       <change beforePath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/TEST-org.blockchain.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/TEST-org.blockchain.AppTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" beforeDir="false" afterPath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/PMOFundHistory.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/PMOFundHistory.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UsersFundsRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UsersFundsRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/security.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/src/main/java/com/api/UserDetail.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/src/main/java/com/api/WebSecurityConfig.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/target/classes/com/api/UserDetail.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/security/target/classes/com/api/WebSecurityConfig.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/services.iml" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/service-providers.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/src/main/java/com/api/MailService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/src/main/java/com/api/RandomNumberGeneratorService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/src/main/java/com/api/UserDetailService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/src/main/java/com/api/ValidationService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/target/classes/com/api/MailService$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/target/classes/com/api/MailService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/target/classes/com/api/RandomNumberGeneratorService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/target/classes/com/api/UserDetailService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/services/target/classes/com/api/ValidationService.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/src/main/java/com/api/Addresses.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/src/main/java/com/api/MailScheduler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/src/main/java/com/api/UniqueIdentifiers.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/Addresses.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/MailScheduler.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/UniqueIdentifiers$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/UniqueIdentifiers$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/UniqueIdentifiers$3.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/UniqueIdentifiers$4.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/target/classes/com/api/UniqueIdentifiers.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/utils.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web3j/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClient.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/src/main/java/com/api/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/src/main/java/com/api/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/ValidationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/ValidationService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClientTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClient.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClientTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClientTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web3j/web3j.iml" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/web3j.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/SuperAdminResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/SuperAdminResource.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/application.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/webresources.iml" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/webresources.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/SuperAdminResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/SuperAdminResource.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +75,7 @@
       <recent name="F:\MajorProject_PoA\FinalDemo\PMRFS\service-providers\src\main\java\com\api\utils" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Web3jClientTest">
+  <component name="RunManager" selected="Application.App">
     <configuration name="App" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.api.App" />
       <module name="webresources" />
@@ -145,8 +104,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.Web3jClientTest" />
         <item itemvalue="Application.App" />
+        <item itemvalue="Application.Web3jClientTest" />
       </list>
     </recent_temporary>
   </component>

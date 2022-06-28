@@ -1,5 +1,6 @@
 package com.api.security;
 
+import com.api.services.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
