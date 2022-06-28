@@ -7,23 +7,22 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="webresources" />
-        <module name="exceptions" />
+        <module name="service-providers" />
         <module name="domain" />
         <module name="web3j" />
+        <module name="webresources" />
+        <module name="exceptions" />
       </profile>
-      <profile name="Disabled">
-        <module name="utils" />
-        <module name="security" />
-        <module name="services" />
-      </profile>
+      <profile name="Disabled" />
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="contributor" target="11" />
       <module name="domain" target="8" />
       <module name="exceptions" target="8" />
       <module name="pmrfs" target="1.8" />
+      <module name="pmrfs-module-mvc" target="11" />
       <module name="security" target="8" />
+      <module name="service-providers" target="11" />
       <module name="services" target="8" />
       <module name="superadmin" target="11" />
       <module name="utils" target="8" />
@@ -37,7 +36,9 @@
       <module name="domain" options="-parameters" />
       <module name="exceptions" options="-parameters" />
       <module name="pmrfs" options="-parameters" />
+      <module name="pmrfs-module-mvc" options="-parameters" />
       <module name="security" options="-parameters" />
+      <module name="service-providers" options="-parameters" />
       <module name="services" options="-parameters" />
       <module name="superadmin" options="-parameters" />
       <module name="utils" options="-parameters" />

@@ -26,6 +26,16 @@ public class Web3jClient {
     private final static BigInteger GAS_LIMIT = BigInteger.valueOf(6721975L);
     private final static BigInteger GAS_PRICE = BigInteger.valueOf(20000000000L);
 
+    public Web3j connectToEthereumNetwork(String url) throws IOException {
+        if(url != null) {
+            Web3j web3j = Web3j.build(new HttpService(url));
+            if(web3j.netVersion().send().getNetVersion() != null) {
+                return web3j;
+            }
+        }
+        return null;
+    }
+
     public void printWeb3Version(Web3j web3j) {
         Web3ClientVersion web3ClientVersion = null;
         try {

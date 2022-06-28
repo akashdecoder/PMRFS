@@ -1,11 +1,12 @@
 package com.api.controller;
 
-import com.api.MailService;
+
 import com.api.Web3jClient;
 import com.api.model.*;
-import com.api.UserDetail;
 import com.api.repository.*;
 
+import com.api.security.UserDetail;
+import com.api.services.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;

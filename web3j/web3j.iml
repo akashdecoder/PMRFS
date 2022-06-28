@@ -11,11 +11,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="module" module-name="service-providers" />
     <orderEntry type="module" module-name="domain" />
-    <orderEntry type="module" module-name="services" />
-    <orderEntry type="module" module-name="security" />
-    <orderEntry type="module" module-name="exceptions" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-actuator:2.6.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:2.6.7" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:2.6.7" level="project" />

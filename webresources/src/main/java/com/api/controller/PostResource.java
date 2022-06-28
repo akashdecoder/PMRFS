@@ -1,9 +1,15 @@
 package com.api.controller;
 
-import com.api.*;
+import com.api.Web3jClient;
 import com.api.model.*;
 import com.api.repository.*;
 
+import com.api.security.UserDetail;
+import com.api.services.MailService;
+import com.api.services.ValidationService;
+import com.api.utils.AddressPrivateKeyMap;
+import com.api.utils.Addresses;
+import kotlin.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -72,6 +78,8 @@ public class PostResource {
     public String createUser(@Valid User user, RedirectAttributes redirectAttributes) throws ExecutionException, InterruptedException {
         List<User> users = userRepository.findAll();
         User u = userRepository.findByAadhaar(user.getUAadhaar());
+        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+
         if(u == null) {
             Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
             if(validationService.isValid(Long.toString(user.getUAadhaar())) == false) {
@@ -87,55 +95,50 @@ public class PostResource {
                 return "redirect:/register";
             }
             if(user.getUCategory().equals("PMO_PTNT")) {
-                user.setUAddress(Addresses.ADDRESS_PMO);
-                user.setUPrivateKey(Addresses.PRIVATE_KEY_PMO);
+                user.setUAddress(addressKeyPair.getFirst());
+                user.setUPrivateKey(addressKeyPair.getSecond());
                 user.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, user.getUAddress()));
                 Roles roles = rolesRepository.findByRName("PMO_PTNT");
                 user.addRole(roles);
             } else if(user.getUCategory().equals("PMO_PUSR")) {
-                user.setUAddress(Addresses.ADDRESS_PMO_1);
-                user.setUPrivateKey(Addresses.PRIVATE_KEY_PMO_1);
+                user.setUAddress(addressKeyPair.getFirst());
+                user.setUPrivateKey(addressKeyPair.getSecond());
                 user.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, user.getUAddress()));
                 Roles roles = rolesRepository.findByRName("PMO_PUSR");
                 user.addRole(roles);
             } else if (user.getUCategory().equals("PMO_VCTM")) {
-                user.setUAddress(Addresses.ADDRESS_PMO_2);
-                user.setUPrivateKey(Addresses.PRIVATE_KEY_PMO_2);
+                user.setUAddress(addressKeyPair.getFirst());
+                user.setUPrivateKey(addressKeyPair.getSecond());
                 user.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, user.getUAddress()));
                 Roles roles = rolesRepository.findByRName("PMO_VCTM");
                 user.addRole(roles);
             } else if(user.getUCategory().equals("CONTRIBUTOR")) {
                 List<User> contributors = userRepository.findByCategory(user.getUCategory());
-                if(contributors.size() > 3) {
-                    redirectAttributes.addFlashAttribute("warning", "No of contributors are exceeded.");
-                    return "redirect:/register";
-                }
-                if(contributors.size() == 0) {
-                    user.setUAddress(Addresses.contributorAddresses.get(0));
-                    user.setUPrivateKey(Addresses.contributorPrivateKeys.get(0));
-                } else {
-                    user.setUAddress(Addresses.contributorAddresses.get(contributors.size() - 1));
-                    user.setUPrivateKey(Addresses.contributorPrivateKeys.get(contributors.size() - 1));
-                }
-
+                user.setUAddress(addressKeyPair.getFirst());
+                user.setUPrivateKey(addressKeyPair.getSecond());
                 user.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, user.getUAddress()));
                 Roles roles = rolesRepository.findByRName("CONTRIBUTOR");
                 user.addRole(roles);
             }
             else {
+                // Run only once
+                while(Integer.parseInt(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 3) {
+                    System.out.println("Under Regular Uers");
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                }
                 if(aadhaarDetailsRepository.getAddressByAadhaar(Long.toString(user.getUAadhaar())) != null) {
                     if(user.getUCategory().equals("Patient")) {
-                        user.setUAddress(Addresses.addresses.get(0));
+                        user.setUAddress(addressKeyPair.getFirst());
                         Roles roles = rolesRepository.findByRName("PTNT");
                         user.setUDisableVerification("0");
                         user.addRole(roles);
                     } else if(user.getUCategory().equals("Public Services")) {
-                        user.setUAddress(Addresses.addresses.get(1));
+                        user.setUAddress(addressKeyPair.getFirst());
                         Roles roles = rolesRepository.findByRName("PUSR");
                         user.setUDisableVerification("0");
                         user.addRole(roles);
                     } else if(user.getUCategory().equals("Affected Victims")) {
-                        user.setUAddress(Addresses.addresses.get(2));
+                        user.setUAddress(addressKeyPair.getFirst());
                         Roles roles = rolesRepository.findByRName("VCTM");
                         user.setUDisableVerification("0");
                         user.addRole(roles);

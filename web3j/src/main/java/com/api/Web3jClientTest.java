@@ -1,5 +1,6 @@
 package com.api;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
 import org.web3j.crypto.WalletUtils;
@@ -19,10 +20,14 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 
 public class Web3jClientTest {
+
+    @Autowired
+    private static Web3jClient web3jClient;
 
     private final static BigInteger GAS_LIMIT = BigInteger.valueOf(6721975L);
     private final static BigInteger GAS_PRICE = BigInteger.valueOf(20000000000L);
@@ -82,9 +87,7 @@ public class Web3jClientTest {
 
     public static void main(String[] args) throws Exception {
 //        for(int i=0; i<keys.size(); i++) {
-//            Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-//            Credentials credentials = getCredentialsFromPrivateKey(keys.get(i));
-//            transferEthereum(web3j, credentials, "0x301B71e1dbcD0a3b7C706Cb4cd5DA819bEc295Ad", 99);
+//
 //        }
 
 //        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
@@ -93,9 +96,26 @@ public class Web3jClientTest {
 //            transferEthereum(web3j, credentials, address, 100);
 //        }
 
+//        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
+//        Credentials credentials = getCredentialsFromPrivateKey("8e04ac437ae9bbeaca6075b9eb30a7654acceddcc68eb705ed695e9be432c88f");
+//        transferEthereum(web3j, credentials, "0x2325b13775484156f66989D0aCB18d61D7ceb5Dc", 1999997);
+
+        int count = 0;
+        Map<String, String> addressKeyMap = AddressPrivateKeyMap.addressKeyPair;
+        List<String> keys = AddressPrivateKeyMap.convertKeysToList();
+
+        //transfer 999999 ETH
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-        Credentials credentials = getCredentialsFromPrivateKey("f3ccf00ee7bffa5510568b3b0d8dbdd8464899dc7e09b3f39df43eb47404de4d");
-        transferEthereum(web3j, credentials, Addresses.ADDRESS_PMO_1, 12);
+        for(String address : addressKeyMap.keySet()) {
+            if(count >= 3) {
+                Credentials credentials = getCredentialsFromPrivateKey(addressKeyMap.get(keys.get(count)));
+                transferEthereum(web3j, credentials, keys.get(count+1), 9999999);
+                count += 2;
+            } else {
+                count += 1;
+                System.out.println(count);
+            }
+        }
 
     }
 }

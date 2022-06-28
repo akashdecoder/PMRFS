@@ -1,12 +1,12 @@
 package com.api.controller;
 
-import com.api.RandomNumberGeneratorService;
 import com.api.model.AadhaarDetails;
 import com.api.model.IncomeDetails;
 import com.api.model.OrganizationDetails;
 import com.api.repository.AadhaarDetailsRepository;
 import com.api.repository.IncomeDetailsRepository;
 import com.api.repository.OrganizationDetailsRepository;
+import com.api.services.RandomNumberGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
