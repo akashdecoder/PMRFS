@@ -1,9 +1,6 @@
 package com.api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -12,68 +9,69 @@ import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Entity
 @Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Getter @Setter Long uId;
+    private Long uId;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uFirstName;
+    private String uFirstName;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uLastName;
+    private String uLastName;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uEmail;
+    private String uEmail;
 
     @Column(nullable = false, length = 1500)
-    private @Getter @Setter String uImageUrl;
+    private String uImageUrl;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uCategory;
+    private String uCategory;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uDob;
+    private String uDob;
 
     @Column(nullable = false, length = 12)
-    private @Getter @Setter Long uAadhaar;
+    private Long uAadhaar;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uPan;
+    private String uPan;
 
     @Column(nullable = false, length = 10)
-    private @Getter @Setter Long uPhone;
+    private Long uPhone;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uPassword;
+    private String uPassword;
 
     @Column(length = 64)
-    private @Getter @Setter String uCurrentOutstandingAmount;
+    private String uCurrentOutstandingAmount;
 
     @Column(length = 64)
-    private @Getter @Setter String uCurrentRequestedAmount;
+    private String uCurrentRequestedAmount;
 
     @Column(length = 64)
-    private @Getter @Setter String uRequestReason;
+    private String uRequestReason;
 
     @Column(nullable = false, length = 64)
-    private @Getter @Setter String uAddress;
+    private String uAddress;
 
     @Column(nullable = true, length = 70)
-    private @Getter @Setter String uPrivateKey;
+    private String uPrivateKey;
 
     @Column(nullable = true)
-    private @Getter @Setter String uApproveStatus; //will get updated on particular user
+    private String uApproveStatus; //will get updated on particular user
 
     @Column(nullable = true)
-    private @Getter @Setter String uDisableVerification;
+    private String uDisableVerification;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "uId"), inverseJoinColumns = @JoinColumn(name = "rId"))
-    private @Getter @Setter Set<Roles> roles = new HashSet<>();
+    private Set<Roles> roles = new HashSet<>();
 
     public void addRole(Roles role) {
         this.roles.add(role);

@@ -38,31 +38,4 @@ public class ValidationService {
         }
         return false;
     }
-
-    public boolean isValidPatientRequest(PatientDetails patientDetails) {
-        boolean flag = false;
-        OrganizationDetails organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(patientDetails.getPHospitalFundRequestId()));
-        if((aadhaarDetailsRepository.getAddressByAadhaar(patientDetails.getPAadhaar()) != null) && (incomeDetailsRepository.getByIncomeId(Long.parseLong(patientDetails.getPIncomeId())) != null) && (organizationDetailsRepository.getByRequestId(Long.parseLong(patientDetails.getPHospitalFundRequestId())) != null) && (UniqueIdentifiers.fundCategoryMap.containsKey(patientDetails.getPCaseType())) && ((Integer.parseInt(patientDetails.getPFundNeed())) <= (Integer.parseInt(organizationDetails.getOAmount())))) {
-            flag = true;
-        }
-        return flag;
-    }
-
-    public boolean isValidPUSRRequest(PublicServiceDetails publicServiceDetails) {
-        boolean flag = false;
-        OrganizationDetails organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(publicServiceDetails.getPUOfficialConsentId()));
-        if((aadhaarDetailsRepository.getAddressByAadhaar(publicServiceDetails.getPUAadhaar()) != null) && (organizationDetailsRepository.getByRequestId(Long.parseLong(publicServiceDetails.getPUOfficialConsentId())) != null) && ((Integer.parseInt(publicServiceDetails.getPUFundNeed())) <= (Integer.parseInt(organizationDetails.getOAmount())))) {
-            flag = true;
-        }
-        return flag;
-    }
-
-    public boolean isValidVictimRequest(VictimDetails victimDetails) {
-        boolean flag = false;
-        OrganizationDetails organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(victimDetails.getVOrganizationId()));
-        if((aadhaarDetailsRepository.getAddressByAadhaar(victimDetails.getVAadhaar()) != null) && (organizationDetailsRepository.getByRequestId(Long.parseLong(victimDetails.getVOrganizationId())) != null) && ((Integer.parseInt(victimDetails.getVFundNeed())) <= (Integer.parseInt(organizationDetails.getOAmount())))) {
-            flag = true;
-        }
-        return flag;
-    }
 }

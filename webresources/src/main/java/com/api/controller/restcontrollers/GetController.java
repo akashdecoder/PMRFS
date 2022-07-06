@@ -17,17 +17,13 @@ import java.util.List;
 @RestController
 public class GetController {
 
-    @Autowired
-    private PatientDetailsRepository patientDetailsRepository;
+    @Autowired private PatientDetailsRepository patientDetailsRepository;
 
-    @Autowired
-    private PublicServiceDetailsRepository publicServiceDetailsRepository;
+    @Autowired private PublicServiceDetailsRepository publicServiceDetailsRepository;
 
-    @Autowired
-    private VictimDetailsRepository victimDetailsRepository;
+    @Autowired private VictimDetailsRepository victimDetailsRepository;
 
-    @Autowired
-    private IncomeDetailsRepository incomeDetailsRepository;
+    @Autowired private IncomeDetailsRepository incomeDetailsRepository;
 
     @GetMapping("/allPatientDetails")
     public List<PatientDetails> getPatientDetails() {

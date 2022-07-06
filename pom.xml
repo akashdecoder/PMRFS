@@ -9,7 +9,8 @@
 		<module>web3j</module>
         <module>exceptions</module>
 		<module>service-providers</module>
-	</modules>
+        <module>tests</module>
+    </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>

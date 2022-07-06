@@ -5,6 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51bd066a-5994-4224-99f5-8858062b8ddf" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_jackson_dataformat_jackson_dataformat_xml_2_13_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_fasterxml_woodstox_woodstox_core_6_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_twilio_sdk_twilio_8_31_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_codec_commons_codec_1_15.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_7.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_api_0_11_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_impl_0_11_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__io_jsonwebtoken_jjwt_jackson_0_11_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_activation_javax_activation_api_1_2_0.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__javax_xml_bind_jaxb_api_2_3_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpclient_4_5_13.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_httpcomponents_httpcore_4_4_15.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_codehaus_woodstox_stax2_api_4_2_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/tests.iml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../PythonWorking/EthereumClientWorking/.idea/EthereumClientWorking.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Blockchain/src/main/java/org/blockchain/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/src/main/java/org/blockchain/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Blockchain/src/main/java/org/blockchain/operations/Blockchain.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/src/main/java/org/blockchain/operations/Blockchain.java" afterDir="false" />
@@ -12,15 +26,42 @@
       <change beforePath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/TEST-org.blockchain.AppTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/TEST-org.blockchain.AppTest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" beforeDir="false" afterPath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-providers/src/main/java/com/api/security/WebSecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/src/main/java/com/api/security/WebSecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/service-providers.iml" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/service-providers.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/ValidationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/ValidationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/src/main/java/com/api/utils/AddressPrivateKeyMap.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/src/main/java/com/api/utils/AddressPrivateKeyMap.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/MailService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/MailService$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/ValidationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/ValidationService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/target/classes/com/api/utils/AddressPrivateKeyMap$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/target/classes/com/api/utils/AddressPrivateKeyMap$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClient.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClientTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/src/main/java/com/api/Web3jClientTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClientTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClientTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web3j/src/main/resources/ValidationContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/src/main/resources/ValidationContract.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web3j/target/classes/ValidationContract.sol" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/target/classes/ValidationContract.sol" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClient.class" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClient.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web3j/target/classes/com/api/Web3jClientTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web3j/web3j.iml" beforeDir="false" afterPath="$PROJECT_DIR$/web3j/web3j.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/restcontrollers/GetController.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/restcontrollers/GetController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_approved_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_approved_funds.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_contributions.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_contributions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/userprofile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/userprofile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/verification.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/verification.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/SuperAdminResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/SuperAdminResource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/restcontrollers/GetController.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/restcontrollers/GetController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/all_approved_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/all_approved_funds.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/all_contributions.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/all_contributions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/userprofile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/userprofile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/verification.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/verification.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/webresources.iml" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/webresources.iml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,8 +73,9 @@
       <list>
         <option value="Solidity Contract" />
         <option value="Interface" />
-        <option value="HTML File" />
+        <option value="Solidity Library" />
         <option value="Class" />
+        <option value="HTML File" />
       </list>
     </option>
   </component>
@@ -66,13 +108,16 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.annotationProcessors" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="F:\MajorProject_PoA\FinalDemo\PMRFS\service-providers\src\main\java\com\api\services" />
       <recent name="F:\MajorProject_PoA\FinalDemo\PMRFS\service-providers\src\main\java\com\api\security" />
       <recent name="F:\MajorProject_PoA\FinalDemo\PMRFS\service-providers\src\main\java\com\api\utils" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\MajorProject_PoA\FinalDemo\PMRFS\web3j\src\main\resources" />
     </key>
   </component>
   <component name="RunManager" selected="Application.App">
@@ -82,6 +127,45 @@
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.api.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="JDBCOperations" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.api.servicestests.JDBCOperations" />
+      <module name="tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.api.servicestests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OtpApp" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.api.servicestests.OtpApp" />
+      <module name="tests" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.api.servicestests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SMSService" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.api.services.SMSService" />
+      <module name="service-providers" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.api.services.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -105,7 +189,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Application.App" />
+        <item itemvalue="Application.JDBCOperations" />
         <item itemvalue="Application.Web3jClientTest" />
+        <item itemvalue="Application.OtpApp" />
+        <item itemvalue="Application.SMSService" />
       </list>
     </recent_temporary>
   </component>

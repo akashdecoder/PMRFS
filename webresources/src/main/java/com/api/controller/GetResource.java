@@ -21,6 +21,7 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
+import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;

@@ -6,6 +6,8 @@ import com.api.repository.*;
 
 import com.api.security.UserDetail;
 import com.api.services.MailService;
+import com.api.services.OtpService;
+import com.api.services.SMSService;
 import com.api.services.ValidationService;
 import com.api.utils.AddressPrivateKeyMap;
 import com.api.utils.Addresses;
@@ -15,6 +17,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.web3j.crypto.Credentials;
@@ -22,6 +26,8 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -32,6 +38,8 @@ import java.util.concurrent.ExecutionException;
 public class PostResource {
 
     private static int numberOfAttempts = 0;
+
+    User sessionUser = null;
 
     @Autowired
     private UserRepository userRepository;
@@ -64,22 +72,32 @@ public class PostResource {
     private ContributorDetailsRepository contributorDetailsRepository;
 
     @Autowired
+    private OtpRepository otpRepository;
+
+    @Autowired
     private ValidationService validationService;
 
     @Autowired
     private MailService mailService;
 
     @Autowired
+    private OtpService otpService;
+
+    @Autowired
+    private SMSService smsService;
+
+    @Autowired
     private Web3jClient web3jClient;
 
-    private User sessionUser;
+    private User tempUser;
+
+    private static User user;
 
     @PostMapping("/registered")
-    public String createUser(@Valid User user, RedirectAttributes redirectAttributes) throws ExecutionException, InterruptedException {
+    public String createUser(@Valid User user, RedirectAttributes redirectAttributes, Model model, HttpSession session) throws ExecutionException, InterruptedException {
         List<User> users = userRepository.findAll();
         User u = userRepository.findByAadhaar(user.getUAadhaar());
         Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
-
         if(u == null) {
             Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
             if(validationService.isValid(Long.toString(user.getUAadhaar())) == false) {
@@ -94,25 +112,50 @@ public class PostResource {
                 redirectAttributes.addFlashAttribute("warning", "Invalid Password");
                 return "redirect:/register";
             }
+
             if(user.getUCategory().equals("PMO_PTNT")) {
+                while(true) {
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                    if (Long.parseLong(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 100) {
+                        break;
+                    }
+                }
                 user.setUAddress(addressKeyPair.getFirst());
                 user.setUPrivateKey(addressKeyPair.getSecond());
                 user.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, user.getUAddress()));
                 Roles roles = rolesRepository.findByRName("PMO_PTNT");
                 user.addRole(roles);
             } else if(user.getUCategory().equals("PMO_PUSR")) {
+                while(true) {
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                    if (Long.parseLong(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 100) {
+                        break;
+                    }
+                }
                 user.setUAddress(addressKeyPair.getFirst());
                 user.setUPrivateKey(addressKeyPair.getSecond());
                 user.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, user.getUAddress()));
                 Roles roles = rolesRepository.findByRName("PMO_PUSR");
                 user.addRole(roles);
             } else if (user.getUCategory().equals("PMO_VCTM")) {
+                while(true) {
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                    if (Long.parseLong(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 100) {
+                        break;
+                    }
+                }
                 user.setUAddress(addressKeyPair.getFirst());
                 user.setUPrivateKey(addressKeyPair.getSecond());
                 user.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, user.getUAddress()));
                 Roles roles = rolesRepository.findByRName("PMO_VCTM");
                 user.addRole(roles);
             } else if(user.getUCategory().equals("CONTRIBUTOR")) {
+                while(true) {
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                    if (Long.parseLong(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 100) {
+                        break;
+                    }
+                }
                 List<User> contributors = userRepository.findByCategory(user.getUCategory());
                 user.setUAddress(addressKeyPair.getFirst());
                 user.setUPrivateKey(addressKeyPair.getSecond());
@@ -151,6 +194,7 @@ public class PostResource {
             if(mailService.sendMail("Registration message", user.getUFirstName(), "", user.getUEmail())) {
                 userRepository.save(user);
                 redirectAttributes.addFlashAttribute("message", "Registered Successfully");
+                return "redirect:/register";
             } else {
                 redirectAttributes.addFlashAttribute("warning", "Invalid Email Id.");
             }
@@ -178,7 +222,7 @@ public class PostResource {
     }
 
     @PostMapping("/verified_ptnt")
-    public String verifyPatientDetails(@Valid PatientDetails patientDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
+    public String verifyPatientDetails(@Valid PatientDetails patientDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
         String pmEmail = "";
         String email = loggedUser.getUsername();
         Timestamp timestamp = Timestamp.from(Instant.now());
@@ -195,7 +239,7 @@ public class PostResource {
                 pmEmail = u.getUEmail();
             }
         }
-        if(validationService.isValidPatientRequest(patientDetails)) {
+        if(web3jClient.isValidated(patientDetails, null, null, true)) {
             userRepository.updateUserApprovedStatus("0", email);
             patientDetails.setUApproveStatus("0");
             patientDetailsRepository.save(patientDetails);
@@ -218,7 +262,7 @@ public class PostResource {
     }
 
     @PostMapping("/verified_vctm")
-    public String verifyVictimDetails(@Valid VictimDetails victimDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
+    public String verifyVictimDetails(@Valid VictimDetails victimDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
         String pmEmail = "";
         String email = loggedUser.getUsername();
         Timestamp timestamp = Timestamp.from(Instant.now());
@@ -231,7 +275,7 @@ public class PostResource {
                 pmEmail = u.getUEmail();
             }
         }
-        if(validationService.isValidVictimRequest(victimDetails)) {
+        if(web3jClient.isValidated(null, null, victimDetails, true)) {
             userRepository.updateUserApprovedStatus("0", email);
             victimDetails.setUApproveStatus("0");
             victimDetailsRepository.save(victimDetails);
@@ -254,7 +298,7 @@ public class PostResource {
     }
 
     @PostMapping("/verified_pusr")
-    public String verifyPublicServiceDetails(@Valid PublicServiceDetails publicServiceDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
+    public String verifyPublicServiceDetails(@Valid PublicServiceDetails publicServiceDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
         String pmEmail = "";
         String email = loggedUser.getUsername();
         Timestamp timestamp = Timestamp.from(Instant.now());
@@ -267,7 +311,7 @@ public class PostResource {
                 pmEmail = u.getUEmail();
             }
         }
-        if(validationService.isValidPUSRRequest(publicServiceDetails)) {
+        if(web3jClient.isValidated(null, publicServiceDetails, null, true)) {
             userRepository.updateUserApprovedStatus("0", email);
             publicServiceDetails.setUApproveStatus("0");
             publicServiceDetailsRepository.save(publicServiceDetails);
