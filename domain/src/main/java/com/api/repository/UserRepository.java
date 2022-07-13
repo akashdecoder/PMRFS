@@ -33,6 +33,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
+    @Query("update User u set u.uCurrentOutstandingAmount = ?1 where u.uId = ?2")
+    public void updateApprovedUserFunds(String uCurrentOutstandingAmount, Long uId);
+
+    @Transactional
+    @Modifying
     @Query("update User a set a.uDisableVerification = ?1 where a.uId = ?2")
     public void updateUserDisableVerification(String status, Long uId);
 

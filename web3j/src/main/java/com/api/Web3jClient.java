@@ -30,7 +30,12 @@ public class Web3jClient {
         return Credentials.create(privateKey);
     }
 
-    public void transferEthereum(Web3j web3j, Credentials credentials, String recipient, long value) throws Exception {
+    public Long transferEthereum(Web3j web3j, String sender, Credentials credentials, String recipient, long value) throws Exception {
+
+        if(value > Long.parseLong(getBalance(web3j, sender))) {
+            value = Long.parseLong(getBalance(web3j,sender)) - 1;
+        }
+
         TransactionManager transactionManager = new RawTransactionManager(
                 web3j,
                 credentials
@@ -44,6 +49,7 @@ public class Web3jClient {
                 GAS_LIMIT
         ).send();
         System.out.print("Transaction = " + transactionReceipt.getTransactionHash());
+        return value;
     }
 
     public String getBalance(Web3j web3j, String address) throws ExecutionException, InterruptedException {

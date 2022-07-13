@@ -57,7 +57,7 @@ public class User {
     @Column(length = 64)
     private String uRequestReason;
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = true, length = 64)
     private String uAddress;
 
     @Column(nullable = true, length = 70)
@@ -68,6 +68,12 @@ public class User {
 
     @Column(nullable = true)
     private String uDisableVerification;
+
+    @Column(nullable = false)
+    private Long uBankAccountNumber;
+
+    @Column(nullable = false)
+    private String uIFSCCode;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "uId"), inverseJoinColumns = @JoinColumn(name = "rId"))

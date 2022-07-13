@@ -7,6 +7,7 @@ import com.api.repository.*;
 
 import com.api.security.UserDetail;
 import com.api.services.MailService;
+import com.api.utils.AddressPrivateKeyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,6 @@ import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
-import javax.servlet.http.HttpSession;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -66,6 +66,12 @@ public class GetResource {
 
     @Autowired
     private ContributorDetailsRepository contributorDetailsRepository;
+
+    @Autowired
+    private FundingDetailsRepository fundingDetailsRepository;
+
+    @Autowired
+    private AddressLogRepository addressLogRepository;
 
     @Autowired
     private Web3jClient web3jClient;
@@ -134,52 +140,109 @@ public class GetResource {
         return "pmo_approve";
     }
 
-    @GetMapping("/request/{uId}")
-    public String approveRequest(@PathVariable("uId") Long uId, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) throws Exception {
-        User u = userRepository.getById(uId);
-        User admin = userRepository.findByEmail(loggedMember.getUsername());
-        UsersFunds uf = usersFundsRepository.findByApprovedStatusAndUid(0, uId);
-        PMOFundHistory pmoFundHistory = new PMOFundHistory();
-        Timestamp timestamp = Timestamp.from(Instant.now());
-        if(u.getUCurrentOutstandingAmount() == null) {
-            u.setUCurrentOutstandingAmount("0");
-        }
-        if (admin.getUCurrentOutstandingAmount() == null) {
-            admin.setUCurrentOutstandingAmount("0");
-        }
-        if(u.getUCurrentRequestedAmount() == null) {
-            redirectAttributes.addFlashAttribute("message", u.getUFirstName() + " not raised fund request");
-            return "redirect:/approveFunds";
-        }
-        long amountRequested = Long.parseLong(u.getUCurrentRequestedAmount());
-        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-        Credentials credentials = web3jClient.getCredentialsFromPrivateKey(admin.getUPrivateKey());
-        web3jClient.transferEthereum(web3j, credentials, u.getUAddress(), amountRequested);
-        if(u.getUCategory().equals("Patient")) {
-            PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(u.getUId(), "0");
+//    @GetMapping("/request/{uId}")
+//    public String approveRequest(@PathVariable("uId") Long uId, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) throws Exception {
+//        User u = userRepository.getById(uId);
+//        User admin = userRepository.findByEmail(loggedMember.getUsername());
+//        UsersFunds uf = usersFundsRepository.findByApprovedStatusAndUid(0, uId);
+//        PMOFundHistory pmoFundHistory = new PMOFundHistory();
+//        Timestamp timestamp = Timestamp.from(Instant.now());
+//        if(u.getUCurrentOutstandingAmount() == null) {
+//            u.setUCurrentOutstandingAmount("0");
+//        }
+//        if (admin.getUCurrentOutstandingAmount() == null) {
+//            admin.setUCurrentOutstandingAmount("0");
+//        }
+//        if(u.getUCurrentRequestedAmount() == null) {
+//            redirectAttributes.addFlashAttribute("message", u.getUFirstName() + " not raised fund request");
+//            return "redirect:/approveFunds";
+//        }
+//        long amountRequested = Long.parseLong(u.getUCurrentRequestedAmount());
+//        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
+//        Credentials credentials = web3jClient.getCredentialsFromPrivateKey(admin.getUPrivateKey());
+//        web3jClient.transferEthereum(web3j, credentials, u.getUAddress(), amountRequested);
+//        if(u.getUCategory().equals("Patient")) {
+//            PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(u.getUId(), "0");
+//            patientDetailsRepository.updatePatientDetails("1", patient.getPId());
+//        } else if(u.getUCategory().equals("Public Services")) {
+//            PublicServiceDetails publicService = publicServiceDetailsRepository.findPublicServiceDetailsByUIdAndApproveStatus(u.getUId(), "0");
+//            publicServiceDetailsRepository.updatePublicServiceDetails("1", publicService.getPUId());
+//        } else if(u.getUCategory().equals("Affected Victims")) {
+//            VictimDetails victim = victimDetailsRepository.findVictimDetailsByUIdAndApproveStatus(u.getUId(), "0");
+//            victimDetailsRepository.updateVictimDetails("1", victim.getVId());
+//        }
+//        userRepository.updateUserApprovedStatus("1", u.getUEmail());
+//        u.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, u.getUAddress()))));
+//        userRepository.updateUserFunds(u.getUCurrentOutstandingAmount(), null, null, u.getUId());
+//        usersFundsRepository.updateUserFunds(1, timestamp, u.getUId(), 0);
+//        admin.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, admin.getUAddress()))));
+//        userRepository.updateUserFunds(admin.getUCurrentOutstandingAmount(), null, null, admin.getUId());
+//        userRepository.updateUserDisableVerification("0", uId);
+//        pmoFundHistory.setUId(u.getUId());
+//        pmoFundHistory.setPFApprovedAmount(Long.toString(amountRequested));
+//        pmoFundHistory.setPFApprovedFundReason(u.getURequestReason());
+//        pmoFundHistory.setPFApprovedFundStatus("1");
+//        pmoFundHistory.setURequestTimestamp(uf.getURequestTimestamp());
+//        pmoFundHistory.setUApprovedTimestamp(timestamp);
+//        mailService.sendMail("Fund Approved", u.getURequestReason(), Long.toString(amountRequested), u.getUEmail());
+//        pmoFundHistoryRepository.save(pmoFundHistory);
+//        return "redirect:/dashboard";
+//    }
+
+    @GetMapping("/request/{fId}")
+    public String approveRequestAmount(@PathVariable("fId") Long fId, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) throws Exception {
+
+        FundingDetails requestedFundDetails = fundingDetailsRepository.getById(fId);
+        long requestedAmount = requestedFundDetails.getFRequestedAmount() / 86508; // INR to ETH
+
+        User requestedUser = userRepository.getById(requestedFundDetails.getUId());
+        User pmoUser = userRepository.findByEmail(loggedMember.getUsername());
+
+        if(requestedUser.getUCategory().equals("Patient")) {
+            PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
             patientDetailsRepository.updatePatientDetails("1", patient.getPId());
-        } else if(u.getUCategory().equals("Public Services")) {
-            PublicServiceDetails publicService = publicServiceDetailsRepository.findPublicServiceDetailsByUIdAndApproveStatus(u.getUId(), "0");
+        } else if(requestedUser.getUCategory().equals("Public Services")) {
+            PublicServiceDetails publicService = publicServiceDetailsRepository.findPublicServiceDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
             publicServiceDetailsRepository.updatePublicServiceDetails("1", publicService.getPUId());
-        } else if(u.getUCategory().equals("Affected Victims")) {
-            VictimDetails victim = victimDetailsRepository.findVictimDetailsByUIdAndApproveStatus(u.getUId(), "0");
+        } else if(requestedUser.getUCategory().equals("Affected Victims")) {
+            VictimDetails victim = victimDetailsRepository.findVictimDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
             victimDetailsRepository.updateVictimDetails("1", victim.getVId());
         }
-        userRepository.updateUserApprovedStatus("1", u.getUEmail());
-        u.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, u.getUAddress()))));
-        userRepository.updateUserFunds(u.getUCurrentOutstandingAmount(), null, null, u.getUId());
-        usersFundsRepository.updateUserFunds(1, timestamp, u.getUId(), 0);
-        admin.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, admin.getUAddress()))));
-        userRepository.updateUserFunds(admin.getUCurrentOutstandingAmount(), null, null, admin.getUId());
-        userRepository.updateUserDisableVerification("0", uId);
-        pmoFundHistory.setUId(u.getUId());
-        pmoFundHistory.setPFApprovedAmount(Long.toString(amountRequested));
-        pmoFundHistory.setPFApprovedFundReason(u.getURequestReason());
+
+        String senderAddress = userRepository.findByEmail(loggedMember.getUsername()).getUAddress();
+
+        // Send transaction from the approver to the requester
+        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
+        Credentials credentials = web3jClient.getCredentialsFromPrivateKey(pmoUser.getUPrivateKey());
+        Long approvedAmount = web3jClient.transferEthereum(web3j, senderAddress, credentials, requestedFundDetails.getFAccountAddress(), requestedAmount);
+
+        // Updating fund details and user details
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        fundingDetailsRepository.updateFundingDetails((approvedAmount * 86508), timestamp, fId);
+        userRepository.updateApprovedUserFunds(Long.toString(Long.parseLong(requestedUser.getUCurrentOutstandingAmount()) + (approvedAmount * 86508)), requestedUser.getUId());
+
+        // Sends the approved amount to a dummy account
+        List<String> addresses = AddressPrivateKeyMap.convertKeysToList();
+        Credentials dummyCredentials = web3jClient.getCredentialsFromPrivateKey(AddressPrivateKeyMap.addressKeyPair.get(requestedFundDetails.getFAccountAddress()));
+        web3jClient.transferEthereum(web3j, requestedFundDetails.getFAccountAddress(), dummyCredentials, addresses.get(addresses.size() - 2),  approvedAmount);
+
+        // Remove access to the account from the user
+        fundingDetailsRepository.revokeAccountAddress(null, fId);
+        userRepository.updateUserDisableVerification("0", requestedUser.getUId());
+
+        // Send a confirmation mail to the requester
+        mailService.sendMail("Fund Approved", requestedFundDetails.getFRequestReason(), Long.toString(requestedAmount * 86508), requestedUser.getUEmail());
+
+        // Save to PMO fund history
+        PMOFundHistory pmoFundHistory = new PMOFundHistory();
+        pmoFundHistory.setUId(requestedUser.getUId());
+        pmoFundHistory.setPFApprovedAmount(Long.toString(requestedAmount));
+        pmoFundHistory.setPFApprovedFundReason(requestedFundDetails.getFRequestReason());
         pmoFundHistory.setPFApprovedFundStatus("1");
-        pmoFundHistory.setURequestTimestamp(uf.getURequestTimestamp());
+        pmoFundHistory.setURequestTimestamp(requestedFundDetails.getFRequestedTimestamp());
         pmoFundHistory.setUApprovedTimestamp(timestamp);
-        mailService.sendMail("Fund Approved", u.getURequestReason(), Long.toString(amountRequested), u.getUEmail());
         pmoFundHistoryRepository.save(pmoFundHistory);
+
         return "redirect:/dashboard";
     }
 
