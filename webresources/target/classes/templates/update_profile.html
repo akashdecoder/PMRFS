@@ -453,6 +453,18 @@
                     <label for= "phone1">Phone Number</label>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Bank Account Number" type="number" id="bank" class="form-control" th:field="*{uBankAccountNumber}">
+                    <label for= "bank">Bank Account Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Bank IFSC Number" type="text" id="ifsc" class="form-control" th:field="*{uIFSCCode}">
+                    <label for= "ifsc">Bank IFSC Number</label>
+                </div>
+            </div>
             <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
                 <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
             </div>
@@ -570,6 +582,18 @@
                     <label for= "phone2">Phone Number</label>
                 </div>
             </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Bank Account Number" type="number" id="bank" class="form-control" th:field="*{uBankAccountNumber}">
+                    <label for= "bank">Bank Account Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Bank IFSC Number" type="text" id="ifsc" class="form-control" th:field="*{uIFSCCode}">
+                    <label for= "ifsc">Bank IFSC Number</label>
+                </div>
+            </div>
             <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">
                 <b><p style="color: red" th:each="err : ${#fields.errors('global')}" th:text="${err}" class="error" /></b>
             </div>
@@ -685,6 +709,18 @@
                 <div class="form-floating">
                     <input placeholder="Phone Number" type="number" id="phone3" class="form-control" th:field="*{uPhone}">
                     <label for= "phone3">Phone Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Bank Account Number" type="number" id="bank" class="form-control" th:field="*{uBankAccountNumber}">
+                    <label for= "bank">Bank Account Number</label>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input placeholder="Bank IFSC Number" type="text" id="ifsc" class="form-control" th:field="*{uIFSCCode}">
+                    <label for= "ifsc">Bank IFSC Number</label>
                 </div>
             </div>
             <div class="col-md-12 text-center" th:if="${#fields.hasErrors('global')}">

@@ -43,12 +43,18 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Transactional
     @Modifying
-    @Query("update User u set u.uFirstName = ?1, u.uLastName = ?2, u.uEmail = ?3, u.uPhone = ?4, u.uAadhaar = ?5, u.uPan = ?6, u.uDob = ?7 where u.uId = ?8")
-    public void updateUser(String firstName, String lastName, String email, Long phone, Long aadhaar, String pan, String dob, Long uId);
+    @Query("update User u set u.uFirstName = ?1, u.uLastName = ?2, u.uEmail = ?3, u.uPhone = ?4, u.uAadhaar = ?5, u.uPan = ?6, u.uDob = ?7, uBankAccountNumber = ?8, uIFSCCode = ?9 where u.uId = ?10")
+    public void updateUser(String firstName, String lastName, String email, Long phone, Long aadhaar, String pan, String dob, Long bank, String ifsc, Long uId);
 
     @Transactional
     @Modifying
     @Query("update User u set u.uApproveStatus = ?1 where u.uEmail = ?2")
     public void updateUserApprovedStatus(String status, String email);
+
+//    @Transactional
+//    @Modifying
+//    @Query("update User u set u.uApproveStatus = ?1 where u.uEmail = ?2")
+//    public void updateUserBankAccount(String status, String email);
+
 
 }

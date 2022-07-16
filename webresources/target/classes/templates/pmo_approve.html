@@ -67,21 +67,25 @@
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Request Fund</th>
-                    <th>Reason</th>
+                    <th>User ID</th>
+                    <th>Account Address</th>
+                    <th>Bank Account Number</th>
+                    <th>Requested Amount</th>
+                    <th>Request Reason</th>
+                    <th>Request Timestamp</th>
                     <th>Approve</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="" th:each="user: ${admin}">
-                    <td style="color: black" th:text="${user.uId}"></td>
-                    <td style="color: black" th:text="${user.uFirstName}"></td>
-                    <td style="color: black" th:text="${user.uCurrentRequestedAmount}"></td>
-                    <td style="color: black" th:text="${user.uRequestReason}"></td>
+                <tr class="" th:each="fund: ${fundDetailsPtnt}">
+                    <td style="color: black" th:text="${fund.uId}"></td>
+                    <td style="color: black" th:text="${fund.fAccountAddress}"></td>
+                    <td style="color: black" th:text="${fund.uBankAccountNumber}"></td>
+                    <td style="color: black" th:text="${fund.fRequestedAmount}"></td>
+                    <td style="color: black" th:text="${fund.fRequestReason}"></td>
+                    <td style="color: black" th:text="${fund.fRequestedTimestamp}"></td>
                     <td><a style="color: white" class="btn btn-warning btn-lg"
-                           th:href="@{/request/{uId}(uId=${user.uId})}" th:text="${user.uCurrentRequestedAmount} != null ? 'Approve' : 'Not Requested'"></a></td>
+                           th:href="@{/request/{fId}(fId=${fund.fId})}" th:text="${fund.fRequestedAmount} != null ? 'Approve' : 'Not Requested'"></a></td>
                 </tr>
                 </tbody>
             </table>
@@ -149,21 +153,25 @@
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Request Fund</th>
-                    <th>Reason</th>
+                    <th>User ID</th>
+                    <th>Account Address</th>
+                    <th>Bank Account Number</th>
+                    <th>Requested Amount</th>
+                    <th>Request Reason</th>
+                    <th>Request Timestamp</th>
                     <th>Approve</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="" th:each="user: ${admin}">
-                    <td style="color: black" th:text="${user.uId}"></td>
-                    <td style="color: black" th:text="${user.uFirstName}"></td>
-                    <td style="color: black" th:text="${user.uCurrentRequestedAmount}"></td>
-                    <td style="color: black" th:text="${user.uRequestReason}"></td>
+                <tr class="" th:each="fund: ${fundDetailsPusr}">
+                    <td style="color: black" th:text="${fund.uId}"></td>
+                    <td style="color: black" th:text="${fund.fAccountAddress}"></td>
+                    <td style="color: black" th:text="${fund.uBankAccountNumber}"></td>
+                    <td style="color: black" th:text="${fund.fRequestedAmount}"></td>
+                    <td style="color: black" th:text="${fund.fRequestReason}"></td>
+                    <td style="color: black" th:text="${fund.fRequestedTimestamp}"></td>
                     <td><a style="color: white" class="btn btn-warning btn-lg"
-                           th:href="@{/request/{uId}(uId=${user.uId})}" th:text="${user.uCurrentRequestedAmount} != null ? 'Approve' : 'Not Requested'"></a></td>
+                           th:href="@{/request/{fId}(fId=${fund.fId})}" th:text="${fund.fRequestedAmount} != null ? 'Approve' : 'Not Requested'"></a></td>
                 </tr>
                 </tbody>
             </table>
@@ -231,21 +239,25 @@
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Request Fund</th>
-                    <th>Reason</th>
+                    <th>User ID</th>
+                    <th>Account Address</th>
+                    <th>Bank Account Number</th>
+                    <th>Requested Amount</th>
+                    <th>Request Reason</th>
+                    <th>Request Timestamp</th>
                     <th>Approve</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr class="" th:each="user: ${admin}">
-                    <td style="color: black" th:text="${user.uId}"></td>
-                    <td style="color: black" th:text="${user.uFirstName}"></td>
-                    <td style="color: black" th:text="${user.uCurrentRequestedAmount}"></td>
-                    <td style="color: black" th:text="${user.uRequestReason}"></td>
+                <tr class="" th:each="fund: ${fundDetailsVctm}">
+                    <td style="color: black" th:text="${fund.uId}"></td>
+                    <td style="color: black" th:text="${fund.fAccountAddress}"></td>
+                    <td style="color: black" th:text="${fund.uBankAccountNumber}"></td>
+                    <td style="color: black" th:text="${fund.fRequestedAmount}"></td>
+                    <td style="color: black" th:text="${fund.fRequestReason}"></td>
+                    <td style="color: black" th:text="${fund.fRequestedTimestamp}"></td>
                     <td><a style="color: white" class="btn btn-warning btn-lg"
-                           th:href="@{/request/{uId}(uId=${user.uId})}" th:text="${user.uCurrentRequestedAmount} != null ? 'Approve' : 'Not Requested'"></a></td>
+                           th:href="@{/request/{fId}(fId=${fund.fId})}" th:text="${fund.fRequestedAmount} != null ? 'Approve' : 'Not Requested'"></a></td>
                 </tr>
                 </tbody>
             </table>

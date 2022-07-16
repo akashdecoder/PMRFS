@@ -52,6 +52,22 @@ public class Web3jClient {
         return value;
     }
 
+    public void transferEthereum(Web3j web3j, Credentials credentials, String recipient, long value) throws Exception {
+        TransactionManager transactionManager = new RawTransactionManager(
+                web3j,
+                credentials
+        );
+        Transfer transfer = new Transfer(web3j, transactionManager);
+        TransactionReceipt transactionReceipt = transfer.sendFunds(
+                recipient,
+                BigDecimal.valueOf(value),
+                Convert.Unit.ETHER,
+                GAS_PRICE,
+                GAS_LIMIT
+        ).send();
+        System.out.print("Transaction = " + transactionReceipt.getTransactionHash());
+    }
+
     public String getBalance(Web3j web3j, String address) throws ExecutionException, InterruptedException {
         EthGetBalance balance = web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST).sendAsync().get();
         BigInteger accountBalance = balance.getBalance();
@@ -75,11 +91,11 @@ public class Web3jClient {
         String contractAddress = deployContract(web3j, credentials);
         PmCare pmCare = loadContract(contractAddress, web3j, credentials);
         if(patientDetails != null) {
-            return pmCare.Patient_Fund_Validation(BigInteger.valueOf(Long.parseLong(patientDetails.getPFundNeed())), patientDetails.getPCaseType(), isValidRequest).send();
+            return pmCare.Patient_Fund_Validation(BigInteger.valueOf(Long.parseLong(patientDetails.getPFundNeed())/86508), patientDetails.getPCaseType(), isValidRequest).send();
         } else if(publicServiceDetails != null) {
-            return pmCare.Public_Service_Fund_Validation(BigInteger.valueOf(Long.parseLong(publicServiceDetails.getPUFundNeed())), publicServiceDetails.getPUServiceType(), isValidRequest).send();
+            return pmCare.Public_Service_Fund_Validation(BigInteger.valueOf(Long.parseLong(publicServiceDetails.getPUFundNeed())/86508), publicServiceDetails.getPUServiceType(), isValidRequest).send();
         } else if(victimDetails != null) {
-            return pmCare.Victim_Fund_Validation(BigInteger.valueOf(Long.parseLong(victimDetails.getVFundNeed())), victimDetails.getVCaseType(), isValidRequest).send();
+            return pmCare.Victim_Fund_Validation(BigInteger.valueOf(Long.parseLong(victimDetails.getVFundNeed())/86508), victimDetails.getVCaseType(), isValidRequest).send();
         }
         return false;
     }

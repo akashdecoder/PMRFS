@@ -10,14 +10,17 @@ import com.api.services.OtpService;
 import com.api.services.SMSService;
 import com.api.services.ValidationService;
 import com.api.utils.AddressPrivateKeyMap;
+import com.api.utils.Addresses;
 import kotlin.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
@@ -258,7 +261,11 @@ public class PostResource {
         User user = userRepository.findByEmail(email);
         List<User> users = userRepository.findAll();
 
-        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+        List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
+
+        OrganizationDetails organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(patientDetails.getPHospitalFundRequestId()));
+
+        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPairForRequester(fundingDetailsList);
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
 
         patientDetails.setUId(user.getUId());
@@ -271,23 +278,23 @@ public class PostResource {
                 pmEmail = u.getUEmail();
             }
         }
-        if(web3jClient.isValidated(patientDetails, null, null, true)) {
-            FundingDetails fundingDetails = new FundingDetails();
-            fundingDetails.setUId(user.getUId());
-            fundingDetails.setFRequestedAmount(Long.parseLong(patientDetails.getPFundNeed()));
-            fundingDetails.setFRequestedTimestamp(timestamp);
-            fundingDetails.setFRequestReason(patientDetails.getPCaseType());
-            fundingDetails.setUBankAccountNumber(user.getUBankAccountNumber());
-            while(Integer.parseInt(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 3) {
-                System.out.println("Under Regular Uers");
-                addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+        if(organizationDetails.getOIsApproved().equals("0")) {
+            if(web3jClient.isValidated(patientDetails, null, null, true)) {
+                patientDetails.setUApproveStatus("0");
+                patientDetailsRepository.save(patientDetails);
+                FundingDetails fundingDetails = new FundingDetails();
+                fundingDetails.setUId(user.getUId());
+                fundingDetails.setFRequestedAmount(Long.parseLong(patientDetails.getPFundNeed()));
+                fundingDetails.setFRequestedTimestamp(timestamp);
+                fundingDetails.setFRequestReason(patientDetails.getPCaseType());
+                fundingDetails.setUBankAccountNumber(user.getUBankAccountNumber());
+                fundingDetails.setFAccountAddress(addressKeyPair.getFirst());
+                fundingDetailsRepository.save(fundingDetails);
+                userRepository.updateUserDisableVerification("1", user.getUId());
+                redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
+                mailService.sendMail("Fund Request Verification", null, patientDetails.getPCaseType(), pmEmail);
+                return "redirect:/verification";
             }
-            fundingDetails.setFAccountAddress(addressKeyPair.getFirst());
-            fundingDetailsRepository.save(fundingDetails);
-            userRepository.updateUserDisableVerification("1", user.getUId());
-            redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
-            mailService.sendMail("Fund Request Verification", null, patientDetails.getPCaseType(), pmEmail);
-            return "redirect:/verification";
         }
         redirectAttributes.addFlashAttribute("warning", "Invalid Request. Fill in correct details");
         return "redirect:/verification";
@@ -337,7 +344,11 @@ public class PostResource {
         User user = userRepository.findByEmail(email);
         List<User> users = userRepository.findAll();
 
-        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+        List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
+
+        OrganizationDetails organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(victimDetails.getVOrganizationId()));
+
+        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPairForRequester(fundingDetailsList);
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
 
         victimDetails.setUId(user.getUId());
@@ -350,23 +361,23 @@ public class PostResource {
                 pmEmail = u.getUEmail();
             }
         }
-        if(web3jClient.isValidated(null, null, victimDetails, true)) {
-            FundingDetails fundingDetails = new FundingDetails();
-            fundingDetails.setUId(user.getUId());
-            fundingDetails.setFRequestedAmount(Long.parseLong(victimDetails.getVFundNeed()));
-            fundingDetails.setFRequestedTimestamp(timestamp);
-            fundingDetails.setFRequestReason(victimDetails.getVCaseType());
-            fundingDetails.setUBankAccountNumber(user.getUBankAccountNumber());
-            while(Integer.parseInt(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 3) {
-                System.out.println("Under Regular Uers");
-                addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+        if(organizationDetails.getOIsApproved().equals("0")) {
+            if(web3jClient.isValidated(null, null, victimDetails, true)) {
+                victimDetails.setUApproveStatus("0");
+                victimDetailsRepository.save(victimDetails);
+                FundingDetails fundingDetails = new FundingDetails();
+                fundingDetails.setUId(user.getUId());
+                fundingDetails.setFRequestedAmount(Long.parseLong(victimDetails.getVFundNeed()));
+                fundingDetails.setFRequestedTimestamp(timestamp);
+                fundingDetails.setFRequestReason(victimDetails.getVCaseType());
+                fundingDetails.setUBankAccountNumber(user.getUBankAccountNumber());
+                fundingDetails.setFAccountAddress(addressKeyPair.getFirst());
+                fundingDetailsRepository.save(fundingDetails);
+                userRepository.updateUserDisableVerification("1", user.getUId());
+                redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
+                mailService.sendMail("Fund Request Verification", null, victimDetails.getVCaseType(), pmEmail);
+                return "redirect:/verification";
             }
-            fundingDetails.setFAccountAddress(addressKeyPair.getFirst());
-            fundingDetailsRepository.save(fundingDetails);
-            userRepository.updateUserDisableVerification("1", user.getUId());
-            redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
-            mailService.sendMail("Fund Request Verification", null, victimDetails.getVCaseType(), pmEmail);
-            return "redirect:/verification";
         }
         redirectAttributes.addFlashAttribute("warning", "Invalid Request. Fill in correct details");
         return "redirect:/verification";
@@ -416,7 +427,10 @@ public class PostResource {
         User user = userRepository.findByEmail(email);
         List<User> users = userRepository.findAll();
 
-        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+        List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
+        OrganizationDetails organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(publicServiceDetails.getPUOfficialConsentId()));
+
+        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPairForRequester(fundingDetailsList);
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
 
         publicServiceDetails.setUId(user.getUId());
@@ -429,23 +443,23 @@ public class PostResource {
                 pmEmail = u.getUEmail();
             }
         }
-        if(web3jClient.isValidated(null, publicServiceDetails, null, true)) {
-            FundingDetails fundingDetails = new FundingDetails();
-            fundingDetails.setUId(user.getUId());
-            fundingDetails.setFRequestedAmount(Long.parseLong(publicServiceDetails.getPUFundNeed()));
-            fundingDetails.setFRequestedTimestamp(timestamp);
-            fundingDetails.setFRequestReason(publicServiceDetails.getPUServiceType());
-            fundingDetails.setUBankAccountNumber(user.getUBankAccountNumber());
-            while(Integer.parseInt(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 3) {
-                System.out.println("Under Regular Uers");
-                addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+        if(organizationDetails.getOIsApproved().equals("0")) {
+            if(web3jClient.isValidated(null, publicServiceDetails, null, true)) {
+                publicServiceDetails.setUApproveStatus("0");
+                publicServiceDetailsRepository.save(publicServiceDetails);
+                FundingDetails fundingDetails = new FundingDetails();
+                fundingDetails.setUId(user.getUId());
+                fundingDetails.setFRequestedAmount(Long.parseLong(publicServiceDetails.getPUFundNeed()));
+                fundingDetails.setFRequestedTimestamp(timestamp);
+                fundingDetails.setFRequestReason(publicServiceDetails.getPUServiceType());
+                fundingDetails.setUBankAccountNumber(user.getUBankAccountNumber());
+                fundingDetails.setFAccountAddress(addressKeyPair.getFirst());
+                fundingDetailsRepository.save(fundingDetails);
+                userRepository.updateUserDisableVerification("1", user.getUId());
+                redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
+                mailService.sendMail("Fund Request Verification", null, publicServiceDetails.getPUServiceType(), pmEmail);
+                return "redirect:/verification";
             }
-            fundingDetails.setFAccountAddress(addressKeyPair.getFirst());
-            fundingDetailsRepository.save(fundingDetails);
-            userRepository.updateUserDisableVerification("1", user.getUId());
-            redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
-            mailService.sendMail("Fund Request Verification", null, publicServiceDetails.getPUServiceType(), pmEmail);
-            return "redirect:/verification";
         }
         redirectAttributes.addFlashAttribute("warning", "Invalid Request. Fill in correct details");
         return "redirect:/verification";
@@ -463,60 +477,60 @@ public class PostResource {
             redirectAttributes.addFlashAttribute("warning", "Invalid Email");
             return "redirect:/account/"+user.getUId();
         }
-        userRepository.updateUser(user.getUFirstName(), user.getULastName(), user.getUEmail(), user.getUPhone(), user.getUAadhaar(), user.getUPan(), user.getUDob(), user.getUId());
+        userRepository.updateUser(user.getUFirstName(), user.getULastName(), user.getUEmail(), user.getUPhone(), user.getUAadhaar(), user.getUPan(), user.getUDob(), user.getUBankAccountNumber(), user.getUIFSCCode(), user.getUId());
         redirectAttributes.addFlashAttribute("message", "Profile Updated");
         return "redirect:/myProfile";
     }
 
 
-//    @PostMapping("/contributed")
-//    public String contributeToPMFund(@Valid ContributorDetails contributorDetails, @AuthenticationPrincipal UserDetails loggedUser, RedirectAttributes redirectAttributes) {
-//        String email = loggedUser.getUsername();
-//        User user = userRepository.findByEmail(email);
-//        User pmo = new User();
-//        Timestamp timestamp = Timestamp.from(Instant.now());
-//        System.out.println(timestamp);
-//        if(Integer.parseInt(contributorDetails.getCAmount()) <= Integer.parseInt(user.getUCurrentOutstandingAmount())) {
-//            Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-//            Credentials credentials = web3jClient.getCredentialsFromPrivateKey(user.getUPrivateKey());
-//            contributorDetails.setCName(user.getUFirstName() + " " + user.getULastName());
-//            contributorDetails.setCAddress(user.getUAddress());
-//            contributorDetails.setCContributionTimestamp(timestamp);
-//            try {
-//                if(contributorDetails.getCContributionFor().equals("PMO_PTNT")) {
-//                    pmo = userRepository.findUserByCategory("PMO_PTNT");
-//                    web3jClient.transferEthereum(web3j, credentials, Addresses.ADDRESS_PMO, Long.parseLong(contributorDetails.getCAmount()));
-//                    userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), null, null, user.getUId());
-//                    contributorDetailsRepository.save(contributorDetails);
-//                    mailService.sendMail("Contribution", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor(), user.getUEmail());
-//                    mailService.sendMail("Contribution PMO", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor() + "with amount: " + contributorDetails.getCAmount(), pmo.getUEmail());
-//                    redirectAttributes.addFlashAttribute("message", contributorDetails.getCAmount() + " is being contributed to PM Relief Fund for " + contributorDetails.getCContributionFor() + ".");
-//                    return "redirect:/contribute";
-//
-//                } else if(contributorDetails.getCContributionFor().equals("PMO_PUSR")) {
-//                    pmo = userRepository.findUserByCategory("PMO_PUSR");
-//                    web3jClient.transferEthereum(web3j, credentials, Addresses.ADDRESS_PMO_1, Long.parseLong(contributorDetails.getCAmount()));
-//                    userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), null, null, user.getUId());
-//                    contributorDetailsRepository.save(contributorDetails);
-//                    mailService.sendMail("Contribution", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor(), user.getUEmail());
-//                    mailService.sendMail("Contribution PMO", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor() + "with amount: " + contributorDetails.getCAmount(), pmo.getUEmail());
-//                    redirectAttributes.addFlashAttribute("message", contributorDetails.getCAmount() + " is being contributed to PM Relief Fund for " + contributorDetails.getCContributionFor() + ".");
-//                    return "redirect:/contribute";
-//                } else if(contributorDetails.getCContributionFor().equals("PMO_VCTM")) {
-//                    pmo = userRepository.findUserByCategory("PMO_VCTM");
-//                    web3jClient.transferEthereum(web3j, credentials, Addresses.ADDRESS_PMO_2, Long.parseLong(contributorDetails.getCAmount()));
-//                    userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), null, null, user.getUId());
-//                    contributorDetailsRepository.save(contributorDetails);
-//                    mailService.sendMail("Contribution", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor(), user.getUEmail());
-//                    mailService.sendMail("Contribution PMO", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor() + "with amount: " + contributorDetails.getCAmount(), pmo.getUEmail());
-//                    redirectAttributes.addFlashAttribute("message", contributorDetails.getCAmount() + " is being contributed to PM Relief Fund for " + contributorDetails.getCContributionFor() + ".");
-//                    return "redirect:/contribute";
-//                }
-//            } catch (Exception e) {
-//                System.out.println(e.getMessage());
-//            }
-//        }
-//        redirectAttributes.addFlashAttribute("warning", "Invalid Details. Please check and fill the correct details");
-//        return "redirect:/contribute";
-//    }
+    @PostMapping("/contributed")
+    public String contributeToPMFund(@Valid ContributorDetails contributorDetails, @AuthenticationPrincipal UserDetails loggedUser, RedirectAttributes redirectAttributes) {
+        String email = loggedUser.getUsername();
+        User user = userRepository.findByEmail(email);
+        User pmo = new User();
+
+        Timestamp timestamp = Timestamp.from(Instant.now());
+        if(Integer.parseInt(contributorDetails.getCAmount()) <= Integer.parseInt(user.getUCurrentOutstandingAmount())) {
+            Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
+            Credentials credentials = web3jClient.getCredentialsFromPrivateKey(user.getUPrivateKey());
+            contributorDetails.setCName(user.getUFirstName() + " " + user.getULastName());
+            contributorDetails.setCAddress(user.getUAddress());
+            contributorDetails.setCContributionTimestamp(timestamp);
+            try {
+                if(contributorDetails.getCContributionFor().equals("PMO_PTNT")) {
+                    pmo = userRepository.findUserByCategory("PMO_PTNT");
+                    web3jClient.transferEthereum(web3j, credentials, pmo.getUAddress(), Long.parseLong(contributorDetails.getCAmount()));
+                    userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), null, null, user.getUId());
+                    contributorDetailsRepository.save(contributorDetails);
+                    mailService.sendMail("Contribution", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor(), user.getUEmail());
+                    mailService.sendMail("Contribution PMO", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor() + "with amount: " + contributorDetails.getCAmount(), pmo.getUEmail());
+                    redirectAttributes.addFlashAttribute("message", contributorDetails.getCAmount() + " is being contributed to PM Relief Fund for " + contributorDetails.getCContributionFor() + ".");
+                    return "redirect:/contribute";
+
+                } else if(contributorDetails.getCContributionFor().equals("PMO_PUSR")) {
+                    pmo = userRepository.findUserByCategory("PMO_PUSR");
+                    web3jClient.transferEthereum(web3j, credentials, pmo.getUAddress(), Long.parseLong(contributorDetails.getCAmount()));
+                    userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), null, null, user.getUId());
+                    contributorDetailsRepository.save(contributorDetails);
+                    mailService.sendMail("Contribution", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor(), user.getUEmail());
+                    mailService.sendMail("Contribution PMO", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor() + "with amount: " + contributorDetails.getCAmount(), pmo.getUEmail());
+                    redirectAttributes.addFlashAttribute("message", contributorDetails.getCAmount() + " is being contributed to PM Relief Fund for " + contributorDetails.getCContributionFor() + ".");
+                    return "redirect:/contribute";
+                } else if(contributorDetails.getCContributionFor().equals("PMO_VCTM")) {
+                    pmo = userRepository.findUserByCategory("PMO_VCTM");
+                    web3jClient.transferEthereum(web3j, credentials, pmo.getUAddress(), Long.parseLong(contributorDetails.getCAmount()));
+                    userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), null, null, user.getUId());
+                    contributorDetailsRepository.save(contributorDetails);
+                    mailService.sendMail("Contribution", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor(), user.getUEmail());
+                    mailService.sendMail("Contribution PMO", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor() + "with amount: " + contributorDetails.getCAmount(), pmo.getUEmail());
+                    redirectAttributes.addFlashAttribute("message", contributorDetails.getCAmount() + " is being contributed to PM Relief Fund for " + contributorDetails.getCContributionFor() + ".");
+                    return "redirect:/contribute";
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        redirectAttributes.addFlashAttribute("warning", "Invalid Details. Please check and fill the correct details");
+        return "redirect:/contribute";
+    }
 }

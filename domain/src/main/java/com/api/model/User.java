@@ -69,10 +69,10 @@ public class User {
     @Column(nullable = true)
     private String uDisableVerification;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long uBankAccountNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String uIFSCCode;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

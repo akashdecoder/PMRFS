@@ -1,5 +1,6 @@
 package com.api.utils;
 
+import com.api.model.FundingDetails;
 import com.api.model.User;
 import kotlin.Pair;
 
@@ -106,9 +107,11 @@ public class AddressPrivateKeyMap {
         put("0x0B549Fbd1fB9c6bC3a9b6BD85A17Ef3f570643e8", "fe9f79ec9578dbbf0fb831bd434f1cc133acf35e5095a08e98d1e8682a344f7e");
         put("0x58531321d358E8aDAcd807e7bff914B913A35423", "e7f31e8421cbd66313dcefc2a66c9121e0ec4c0f9801c2da83d457d367e420cc");
         put("0x56b90F29687417Dc6C929EA28913b9BE39b66BFa", "8a21e5401cf71de400f52b2b2b42303e6e8cb660aa1003790b61b8b90f67e4f4");
-        put("0x1cCf59AeA69C5cfE3CD0c06E16bCC6F25DA01eB1", "4a64b42a88aed7bc607b37131cae24d0957c89f30e4c19ca980e8b1ab302a93e");
+//        put("0x1cCf59AeA69C5cfE3CD0c06E16bCC6F25DA01eB1", "4a64b42a88aed7bc607b37131cae24d0957c89f30e4c19ca980e8b1ab302a93e");
 //        put("0x85A83555072bF2A6265d364Cb9aF71f335C916D5", "ffcb1bfdb084fa4ee971b6dee58f82957ec6045c43b068f2606111f2638ef716");
     }};
+
+    public static String DUMMY_ACCOUNT_ADDRESS = "0x1cCf59AeA69C5cfE3CD0c06E16bCC6F25DA01eB1";
 
     public static List<String> convertKeysToList() {
         List<String> keyList = new ArrayList<>();
@@ -127,10 +130,23 @@ public class AddressPrivateKeyMap {
     public static Pair<String, String> getNewKeyPair(List<User> users) {
         Pair<String, String> newPair;
         List<String> keyList = convertKeysToList();
-        String freshKey = generateFreshKey(0, 99, keyList);
+        String freshKey = generateFreshKey(0, 97, keyList);
         for(User user : users) {
             if(user.getUAddress().equals(freshKey)) {
                 return getNewKeyPair(users);
+            }
+        }
+        newPair = new Pair<>(freshKey, addressKeyPair.get(freshKey));
+        return newPair;
+    }
+
+    public static Pair<String, String> getNewKeyPairForRequester(List<FundingDetails> fundingDetailsList) {
+        Pair<String, String> newPair;
+        List<String> keyList = convertKeysToList();
+        String freshKey = generateFreshKey(0, 97, keyList);
+        for(FundingDetails fundingDetails : fundingDetailsList) {
+            if(fundingDetails.getFAccountAddress().equals(freshKey)) {
+                return getNewKeyPairForRequester(fundingDetailsList);
             }
         }
         newPair = new Pair<>(freshKey, addressKeyPair.get(freshKey));

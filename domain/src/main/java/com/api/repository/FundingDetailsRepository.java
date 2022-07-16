@@ -19,6 +19,6 @@ public interface FundingDetailsRepository extends JpaRepository<FundingDetails, 
 
     @Transactional
     @Modifying
-    @Query(value = "update funding_details set f_account_address = 1? where f_id = 2?", nativeQuery = true)
+    @Query(value = "update funding_details set f_account_address = ?1 where f_id = ?2", nativeQuery = true)
     public void revokeAccountAddress(String address, Long fId);
 }

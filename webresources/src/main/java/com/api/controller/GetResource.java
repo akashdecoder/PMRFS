@@ -102,14 +102,26 @@ public class GetResource {
     @GetMapping("/dashboard")
     public String showMemberDashboard(@AuthenticationPrincipal UserDetail loggedMember, Model model) throws ExecutionException, InterruptedException {
         Map<String, Object> attributes = new HashMap<String, Object>();
-        User admin = userRepository.findByEmail(loggedMember.getUsername());
         User u = userRepository.findByEmail(loggedMember.getUsername());
-        List<UsersFunds> usersFunds = usersFundsRepository.findAllByUId(u.getUId());
+//        List<UsersFunds> usersFunds = usersFundsRepository.findAllByUId(u.getUId());
         List<PMOFundHistory> pmFunds = pmoFundHistoryRepository.findAllApprovedStatus("1");
-        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-        admin.setUCurrentOutstandingAmount(web3jClient.getBalance(web3j, admin.getUAddress()));
+        List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
+        List<FundingDetails> approvedFunds = new ArrayList<>();
+        List<FundingDetails> usersFunds = new ArrayList<>();
+        for(FundingDetails details : fundingDetailsList) {
+            if(details.getFApprovedAmount() != null) {
+                approvedFunds.add(details);
+            }
+        }
+
+        for(FundingDetails userFundDetails : approvedFunds) {
+            if(userFundDetails.getUId() == u.getUId()) {
+                usersFunds.add(userFundDetails);
+            }
+        }
+
         List<ContributorDetails> contributorDetailsList = contributorDetailsRepository.findAllByName(u.getUFirstName()+" "+u.getULastName());
-        attributes.put("pmFunds", pmFunds); // For PMO
+        attributes.put("fundDetails", approvedFunds); // For PMO
         attributes.put("users", usersFunds); // For other roles
         attributes.put("fund", userRepository.findByEmail(loggedMember.getUsername()).getUCurrentOutstandingAmount()); // For other roles
         attributes.put("contributions", contributorDetailsList);
@@ -118,25 +130,52 @@ public class GetResource {
         return "dashboard";
     }
 
+//    @GetMapping("/approveFunds")
+//    public String showRequestedFunds(@AuthenticationPrincipal UserDetail loggedUser, Model model) {
+//        User admin = userRepository.findByEmail(loggedUser.getUsername());
+//        List<User> users = userRepository.findAll();
+//        List<User> userList = new ArrayList<User>();
+//        for(User user : users) {
+//            if(user.hasRole("PMO_PTNT")) {
+//                continue;
+//            } else if(user.hasRole("PMO_PUSR")) {
+//                continue;
+//            } else if(user.hasRole("PMO_VCTM")) {
+//                continue;
+//            } else if(user.hasRole("CONTRIBUTOR")) {
+//                continue;
+//            }
+//            System.out.println(user.getUEmail());
+//            userList.add(user);
+//        }
+//        model.addAttribute("admin", userList);
+//        return "pmo_approve";
+//    }
+
     @GetMapping("/approveFunds")
     public String showRequestedFunds(@AuthenticationPrincipal UserDetail loggedUser, Model model) {
-        User admin = userRepository.findByEmail(loggedUser.getUsername());
-        List<User> users = userRepository.findAll();
-        List<User> userList = new ArrayList<User>();
-        for(User user : users) {
-            if(user.hasRole("PMO_PTNT")) {
-                continue;
-            } else if(user.hasRole("PMO_PUSR")) {
-                continue;
-            } else if(user.hasRole("PMO_VCTM")) {
-                continue;
-            } else if(user.hasRole("CONTRIBUTOR")) {
-                continue;
+        List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
+        List<FundingDetails> requestedFundsPtnt = new ArrayList<>();
+        List<FundingDetails> requestedFundsPusr = new ArrayList<>();
+        List<FundingDetails> requestedFundsVctm = new ArrayList<>();
+        for(FundingDetails details : fundingDetailsList) {
+            if(userRepository.getById(details.getUId()).hasRole("PTNT")) {
+                if(details.getFApprovedAmount() == null) {
+                    requestedFundsPtnt.add(details);
+                }
+            } else if(userRepository.getById(details.getUId()).hasRole("PUSR")) {
+                if(details.getFApprovedAmount() == null) {
+                    requestedFundsPusr.add(details);
+                }
+            } else if(userRepository.getById(details.getUId()).hasRole("VCTM")) {
+                if(details.getFApprovedAmount() == null) {
+                    requestedFundsVctm.add(details);
+                }
             }
-            System.out.println(user.getUEmail());
-            userList.add(user);
         }
-        model.addAttribute("admin", userList);
+        model.addAttribute("fundDetailsPtnt", requestedFundsPtnt);
+        model.addAttribute("fundDetailsPusr", requestedFundsPusr);
+        model.addAttribute("fundDetailsVctm", requestedFundsVctm);
         return "pmo_approve";
     }
 
@@ -176,7 +215,7 @@ public class GetResource {
 //        userRepository.updateUserFunds(u.getUCurrentOutstandingAmount(), null, null, u.getUId());
 //        usersFundsRepository.updateUserFunds(1, timestamp, u.getUId(), 0);
 //        admin.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, admin.getUAddress()))));
-//        userRepository.updateUserFunds(admin.getUCurrentOutstandingAmount(), null, null, admin.getUId());
+////        userRepository.updateUserFunds(admin.getUCurrentOutstandingAmount(), null, null, admin.getUId());
 //        userRepository.updateUserDisableVerification("0", uId);
 //        pmoFundHistory.setUId(u.getUId());
 //        pmoFundHistory.setPFApprovedAmount(Long.toString(amountRequested));
@@ -198,15 +237,22 @@ public class GetResource {
         User requestedUser = userRepository.getById(requestedFundDetails.getUId());
         User pmoUser = userRepository.findByEmail(loggedMember.getUsername());
 
+        userRepository.updateApprovedUserFunds("0", requestedUser.getUId());
+
+        OrganizationDetails organizationDetails = new OrganizationDetails();
+
         if(requestedUser.getUCategory().equals("Patient")) {
             PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
             patientDetailsRepository.updatePatientDetails("1", patient.getPId());
+            organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(patient.getPHospitalFundRequestId()));
         } else if(requestedUser.getUCategory().equals("Public Services")) {
             PublicServiceDetails publicService = publicServiceDetailsRepository.findPublicServiceDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
             publicServiceDetailsRepository.updatePublicServiceDetails("1", publicService.getPUId());
+            organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(publicService.getPUOfficialConsentId()));
         } else if(requestedUser.getUCategory().equals("Affected Victims")) {
             VictimDetails victim = victimDetailsRepository.findVictimDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
             victimDetailsRepository.updateVictimDetails("1", victim.getVId());
+            organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(victim.getVOrganizationId()));
         }
 
         String senderAddress = userRepository.findByEmail(loggedMember.getUsername()).getUAddress();
@@ -214,20 +260,21 @@ public class GetResource {
         // Send transaction from the approver to the requester
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
         Credentials credentials = web3jClient.getCredentialsFromPrivateKey(pmoUser.getUPrivateKey());
-        Long approvedAmount = web3jClient.transferEthereum(web3j, senderAddress, credentials, requestedFundDetails.getFAccountAddress(), requestedAmount);
+        Long approvedAmount = web3jClient.transferEthereum(web3j, pmoUser.getUAddress(), credentials, requestedFundDetails.getFAccountAddress(), requestedAmount);
 
         // Updating fund details and user details
         Timestamp timestamp = Timestamp.from(Instant.now());
         fundingDetailsRepository.updateFundingDetails((approvedAmount * 86508), timestamp, fId);
+        System.out.println(Long.toString(Long.parseLong(requestedUser.getUCurrentOutstandingAmount()) + (approvedAmount * 86508)));
         userRepository.updateApprovedUserFunds(Long.toString(Long.parseLong(requestedUser.getUCurrentOutstandingAmount()) + (approvedAmount * 86508)), requestedUser.getUId());
 
         // Sends the approved amount to a dummy account
         List<String> addresses = AddressPrivateKeyMap.convertKeysToList();
         Credentials dummyCredentials = web3jClient.getCredentialsFromPrivateKey(AddressPrivateKeyMap.addressKeyPair.get(requestedFundDetails.getFAccountAddress()));
-        web3jClient.transferEthereum(web3j, requestedFundDetails.getFAccountAddress(), dummyCredentials, addresses.get(addresses.size() - 2),  approvedAmount);
+        web3jClient.transferEthereum(web3j, requestedFundDetails.getFAccountAddress(), dummyCredentials, AddressPrivateKeyMap.DUMMY_ACCOUNT_ADDRESS,  approvedAmount);
 
         // Remove access to the account from the user
-        fundingDetailsRepository.revokeAccountAddress(null, fId);
+        fundingDetailsRepository.revokeAccountAddress("000", fId);
         userRepository.updateUserDisableVerification("0", requestedUser.getUId());
 
         // Send a confirmation mail to the requester
@@ -242,6 +289,9 @@ public class GetResource {
         pmoFundHistory.setURequestTimestamp(requestedFundDetails.getFRequestedTimestamp());
         pmoFundHistory.setUApprovedTimestamp(timestamp);
         pmoFundHistoryRepository.save(pmoFundHistory);
+
+        userRepository.updateUserFunds(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, pmoUser.getUAddress()))), null, null, pmoUser.getUId());
+        organizationDetailsRepository.updateIsApprovedOrganizationId("1", organizationDetails.getOId());
 
         return "redirect:/dashboard";
     }
@@ -294,7 +344,14 @@ public class GetResource {
             model.addAttribute("requests", requestList);
         } else {
             List<OrganizationDetails> requestList = organizationDetailsRepository.getAllByAadhaar(Long.toString(user.getUAadhaar()));
-            model.addAttribute("requests", requestList);
+            List<OrganizationDetails> currentRequests = new ArrayList<>();
+            System.out.println(requestList.get(0).toString());
+            for(OrganizationDetails organizationDetails : requestList) {
+                if(organizationDetails.getOIsApproved().equals("0")) {
+                    currentRequests.add(organizationDetails);
+                }
+            }
+            model.addAttribute("requests", currentRequests);
         }
         return "organization_request_list.html";
     }

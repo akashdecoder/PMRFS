@@ -78,7 +78,8 @@ public class SuperAdminResource {
     public String addRequestFundDetails(@Valid OrganizationDetails organizationDetails, RedirectAttributes redirectAttributes) {
         AadhaarDetails aadhaarDetail = aadhaarDetailsRepository.findByAadhaar(organizationDetails.getUAadhaar());
         if(aadhaarDetail != null) {
-            organizationDetails.setORequestId(Long.parseLong(randomNumberGeneratorService.generateRandomId()));;
+            organizationDetails.setORequestId(Long.parseLong(randomNumberGeneratorService.generateRandomId()));
+            organizationDetails.setOIsApproved("0");
             organizationDetailsRepository.save(organizationDetails);
             redirectAttributes.addFlashAttribute("message", "Added Details Successfully");
             return "redirect:/addRequestFundDetails";
