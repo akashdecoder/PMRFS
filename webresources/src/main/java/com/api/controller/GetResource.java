@@ -10,6 +10,7 @@ import com.api.services.MailService;
 import com.api.utils.AddressPrivateKeyMap;
 import kotlin.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -348,6 +349,23 @@ public class GetResource {
         }
         model.addAttribute("fundDetails", fundingDetailsRepository.findAll());
         return "all_approved_funds.html";
+    }
+
+    @GetMapping("/forgotPassword")
+    public String showForgotPassword() {
+        return "forgot_password";
+    }
+
+    @GetMapping("/resetPassword")
+    public String showResetPassword(@Param(value = "token") String token, Model model, RedirectAttributes redirectAttributes) {
+        User user = userRepository.findUserByResetPasswordToken(token);
+        model.addAttribute("token", token);
+        if(user == null) {
+            redirectAttributes.addFlashAttribute("warning", "Invalid token");
+            return "redirect:/resetPassword";
+        }
+        redirectAttributes.addFlashAttribute("message", "Password is reset, please login to continue.");
+        return "redirect:/login";
     }
 }
 

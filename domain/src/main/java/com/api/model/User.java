@@ -75,6 +75,9 @@ public class User {
     @Column(nullable = true)
     private String uIFSCCode;
 
+    @Column(nullable = true)
+    private String uPasswordResetToken;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "uId"), inverseJoinColumns = @JoinColumn(name = "rId"))
     private Set<Roles> roles = new HashSet<>();

@@ -23,7 +23,7 @@ public class ValidationService {
     @Autowired
     private OrganizationDetailsRepository organizationDetailsRepository;
 
-    public boolean isValid(String data) {
+    public boolean isValid(String data, String identifier) {
         String aadhaarRegex = "^[0-9]{4}[0-9]{4}[0-9]{4}$";
         String passwordRegex = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$";
         String emailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";

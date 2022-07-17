@@ -6,12 +6,16 @@ import com.api.repository.*;
 
 import com.api.security.UserDetail;
 import com.api.services.MailService;
+import com.api.services.ResetPasswordService;
 import com.api.services.ValidationService;
 import com.api.utils.AddressPrivateKeyMap;
+import com.api.utils.Utility;
 import kotlin.Pair;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +26,7 @@ import org.web3j.protocol.Web3j;
 import org.web3j.protocol.http.HttpService;
 
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
@@ -73,6 +78,9 @@ public class PostResource {
     private MailService mailService;
 
     @Autowired
+    private ResetPasswordService resetPasswordService;
+
+    @Autowired
     private Web3jClient web3jClient;
 
     @PostMapping("/registered")
@@ -97,15 +105,15 @@ public class PostResource {
         Pair<String, String> addressKeyPair;
         if(u == null) {
             Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-            if(!validationService.isValid(Long.toString(user.getUAadhaar()))) {
+            if(!validationService.isValid(Long.toString(user.getUAadhaar()), "Aadhaar")) {
                 redirectAttributes.addFlashAttribute("warning", "Invalid Aadhaar");
                 return "redirect:/register";
             }
-            if(!validationService.isValid(user.getUEmail())) {
+            if(!validationService.isValid(user.getUEmail(), "Email")) {
                 redirectAttributes.addFlashAttribute("warning", "Invalid Email");
                 return "redirect:/register";
             }
-            if(!validationService.isValid(user.getUPassword())) {
+            if(!validationService.isValid(user.getUPassword(), "Password")) {
                 redirectAttributes.addFlashAttribute("warning", "Invalid Password");
                 return "redirect:/register";
             }
@@ -354,11 +362,11 @@ public class PostResource {
 
     @PostMapping("/updated/{uId}")
     public String updateProfile(User user, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
-        if(!validationService.isValid(Long.toString(user.getUAadhaar()))) {
+        if(!validationService.isValid(Long.toString(user.getUAadhaar()), "Aadhaar")) {
             redirectAttributes.addFlashAttribute("warning", "Invalid Aadhaar");
             return "redirect:/account/"+user.getUId();
         }
-        if(!validationService.isValid(user.getUEmail())) {
+        if(!validationService.isValid(user.getUEmail(), "Email")) {
             redirectAttributes.addFlashAttribute("warning", "Invalid Email");
             return "redirect:/account/"+user.getUId();
         }
@@ -417,5 +425,55 @@ public class PostResource {
         }
         redirectAttributes.addFlashAttribute("warning", "Invalid Details. Please check and fill the correct details");
         return "redirect:/contribute";
+    }
+
+    @PostMapping("/forgotPassword")
+    public String processForgotPassword(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        String email = request.getParameter("email");
+        String token = RandomString.make(30);
+        try {
+            userRepository.updateResetPasswordToken(token, email);
+            String resetPasswordLink = Utility.getSiteUrl(request) + "/resetPassword?token=" + token;
+            mailService.sendMail("Reset Password", userRepository.findByEmail(email).getUFirstName(), resetPasswordLink, email);
+            redirectAttributes.addFlashAttribute("message", "The password reset link has been sent to " + email + ". Please go through the link to follow the procedure.");
+        } catch (UsernameNotFoundException exception) {
+            model.addAttribute("error", exception.getMessage());
+            redirectAttributes.addFlashAttribute("warning", "Email not found");
+        }
+        return "redirect:/forgotPassword";
+    }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        String token = request.getParameter("token");
+        String newPassword = request.getParameter("newPassword");
+        String confirmPassword = request.getParameter("confirmPassword");
+        String redirectAttributeName = "", redirectAttributeValue = "", returnPage = "";
+        User user = userRepository.findUserByResetPasswordToken(token);
+        if(user == null) {
+            redirectAttributeName = "warning";
+            redirectAttributeValue = "Invalid Token";
+            returnPage = "redirect:/resetPassword";
+        } else {
+            if(validationService.isValid(newPassword, "Password")) {
+                if(!newPassword.equals(confirmPassword)) {
+                    redirectAttributeName = "warning";
+                    redirectAttributeValue = "Password mismatch.";
+                    returnPage = "redirect:/resetPassword?token=" + token;
+                } else {
+                    resetPasswordService.updatePassword(user, newPassword);
+                    resetPasswordService.updateResetPasswordToken(token, user.getUEmail());
+                    redirectAttributeName = "message";
+                    redirectAttributeValue = "Password is reset. Please login with new credential.";
+                    returnPage = "redirect:/login";
+                }
+            } else {
+                redirectAttributeName = "warning";
+                redirectAttributeValue = "Password not in format. Please type correctly.";
+                returnPage = "redirect:/resetPassword?token=" + token;
+            }
+        }
+        redirectAttributes.addFlashAttribute(redirectAttributeName, redirectAttributeValue);
+        return returnPage;
     }
 }

@@ -50,6 +50,11 @@ public class MailService {
                     mimeMessage.setSubject("Fund Contribution: " + message);
                     MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
                     mimeMessageHelper.setText(body, true);
+                } else if(identifier.equals("Reset Password")) {
+                    String body = "<html><body><div><h2>Hello, " + name + "</h2><p>The password reset link is being generated, please reset the password by clicking the following link </p>Click here: <br><br><p><a href=\""+ message +"\"> " + message +"</a> to login to your portal.</p></div></body></html>";
+                    mimeMessage.setSubject("Password Reset Link");
+                    MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+                    mimeMessageHelper.setText(body, true);
                 }
             }
         };
