@@ -8,6 +8,7 @@ import com.api.repository.*;
 import com.api.security.UserDetail;
 import com.api.services.MailService;
 import com.api.utils.AddressPrivateKeyMap;
+import kotlin.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,10 +25,7 @@ import org.web3j.protocol.http.HttpService;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -71,9 +69,6 @@ public class GetResource {
     private FundingDetailsRepository fundingDetailsRepository;
 
     @Autowired
-    private AddressLogRepository addressLogRepository;
-
-    @Autowired
     private Web3jClient web3jClient;
 
     @Autowired
@@ -100,11 +95,14 @@ public class GetResource {
     }
 
     @GetMapping("/dashboard")
-    public String showMemberDashboard(@AuthenticationPrincipal UserDetail loggedMember, Model model) throws ExecutionException, InterruptedException {
+    public String showMemberDashboard(@AuthenticationPrincipal UserDetail loggedMember, Model model, RedirectAttributes redirectAttributes) {
         Map<String, Object> attributes = new HashMap<String, Object>();
-        User u = userRepository.findByEmail(loggedMember.getUsername());
-//        List<UsersFunds> usersFunds = usersFundsRepository.findAllByUId(u.getUId());
-        List<PMOFundHistory> pmFunds = pmoFundHistoryRepository.findAllApprovedStatus("1");
+        User user = userRepository.findByEmail(loggedMember.getUsername());
+        if(user.getUBankAccountNumber() == null) {
+            if(user.hasRole("PTNT") || user.hasRole("VCTM") || user.hasRole("PUSR")) {
+                model.addAttribute("warning", "Please update your bank account number and IFSC code");
+            }
+        }
         List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
         List<FundingDetails> approvedFunds = new ArrayList<>();
         List<FundingDetails> usersFunds = new ArrayList<>();
@@ -114,46 +112,30 @@ public class GetResource {
             }
         }
 
-        for(FundingDetails userFundDetails : approvedFunds) {
-            if(userFundDetails.getUId() == u.getUId()) {
+        for(FundingDetails userFundDetails : fundingDetailsList) {
+            if(Objects.equals(userFundDetails.getUId(), user.getUId())) {
                 usersFunds.add(userFundDetails);
             }
         }
 
-        List<ContributorDetails> contributorDetailsList = contributorDetailsRepository.findAllByName(u.getUFirstName()+" "+u.getULastName());
+        List<ContributorDetails> contributorDetailsList = contributorDetailsRepository.findAllByName(user.getUFirstName()+" "+user.getULastName());
+
         attributes.put("fundDetails", approvedFunds); // For PMO
         attributes.put("users", usersFunds); // For other roles
         attributes.put("fund", userRepository.findByEmail(loggedMember.getUsername()).getUCurrentOutstandingAmount()); // For other roles
         attributes.put("contributions", contributorDetailsList);
         attributes.put("contributions_lists", contributorDetailsRepository.findAll());
+        attributes.put("uId", user.getUId());
         model.addAllAttributes(attributes);
         return "dashboard";
     }
 
-//    @GetMapping("/approveFunds")
-//    public String showRequestedFunds(@AuthenticationPrincipal UserDetail loggedUser, Model model) {
-//        User admin = userRepository.findByEmail(loggedUser.getUsername());
-//        List<User> users = userRepository.findAll();
-//        List<User> userList = new ArrayList<User>();
-//        for(User user : users) {
-//            if(user.hasRole("PMO_PTNT")) {
-//                continue;
-//            } else if(user.hasRole("PMO_PUSR")) {
-//                continue;
-//            } else if(user.hasRole("PMO_VCTM")) {
-//                continue;
-//            } else if(user.hasRole("CONTRIBUTOR")) {
-//                continue;
-//            }
-//            System.out.println(user.getUEmail());
-//            userList.add(user);
-//        }
-//        model.addAttribute("admin", userList);
-//        return "pmo_approve";
-//    }
-
     @GetMapping("/approveFunds")
-    public String showRequestedFunds(@AuthenticationPrincipal UserDetail loggedUser, Model model) {
+    public String showRequestedFunds(@AuthenticationPrincipal UserDetail loggedUser, Model model, RedirectAttributes redirectAttributes) {
+        if(loggedUser.getUsername() == null) {
+            redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
+            return "redirect:/login";
+        }
         List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
         List<FundingDetails> requestedFundsPtnt = new ArrayList<>();
         List<FundingDetails> requestedFundsPusr = new ArrayList<>();
@@ -179,67 +161,20 @@ public class GetResource {
         return "pmo_approve";
     }
 
-//    @GetMapping("/request/{uId}")
-//    public String approveRequest(@PathVariable("uId") Long uId, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) throws Exception {
-//        User u = userRepository.getById(uId);
-//        User admin = userRepository.findByEmail(loggedMember.getUsername());
-//        UsersFunds uf = usersFundsRepository.findByApprovedStatusAndUid(0, uId);
-//        PMOFundHistory pmoFundHistory = new PMOFundHistory();
-//        Timestamp timestamp = Timestamp.from(Instant.now());
-//        if(u.getUCurrentOutstandingAmount() == null) {
-//            u.setUCurrentOutstandingAmount("0");
-//        }
-//        if (admin.getUCurrentOutstandingAmount() == null) {
-//            admin.setUCurrentOutstandingAmount("0");
-//        }
-//        if(u.getUCurrentRequestedAmount() == null) {
-//            redirectAttributes.addFlashAttribute("message", u.getUFirstName() + " not raised fund request");
-//            return "redirect:/approveFunds";
-//        }
-//        long amountRequested = Long.parseLong(u.getUCurrentRequestedAmount());
-//        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-//        Credentials credentials = web3jClient.getCredentialsFromPrivateKey(admin.getUPrivateKey());
-//        web3jClient.transferEthereum(web3j, credentials, u.getUAddress(), amountRequested);
-//        if(u.getUCategory().equals("Patient")) {
-//            PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(u.getUId(), "0");
-//            patientDetailsRepository.updatePatientDetails("1", patient.getPId());
-//        } else if(u.getUCategory().equals("Public Services")) {
-//            PublicServiceDetails publicService = publicServiceDetailsRepository.findPublicServiceDetailsByUIdAndApproveStatus(u.getUId(), "0");
-//            publicServiceDetailsRepository.updatePublicServiceDetails("1", publicService.getPUId());
-//        } else if(u.getUCategory().equals("Affected Victims")) {
-//            VictimDetails victim = victimDetailsRepository.findVictimDetailsByUIdAndApproveStatus(u.getUId(), "0");
-//            victimDetailsRepository.updateVictimDetails("1", victim.getVId());
-//        }
-//        userRepository.updateUserApprovedStatus("1", u.getUEmail());
-//        u.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, u.getUAddress()))));
-//        userRepository.updateUserFunds(u.getUCurrentOutstandingAmount(), null, null, u.getUId());
-//        usersFundsRepository.updateUserFunds(1, timestamp, u.getUId(), 0);
-//        admin.setUCurrentOutstandingAmount(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, admin.getUAddress()))));
-////        userRepository.updateUserFunds(admin.getUCurrentOutstandingAmount(), null, null, admin.getUId());
-//        userRepository.updateUserDisableVerification("0", uId);
-//        pmoFundHistory.setUId(u.getUId());
-//        pmoFundHistory.setPFApprovedAmount(Long.toString(amountRequested));
-//        pmoFundHistory.setPFApprovedFundReason(u.getURequestReason());
-//        pmoFundHistory.setPFApprovedFundStatus("1");
-//        pmoFundHistory.setURequestTimestamp(uf.getURequestTimestamp());
-//        pmoFundHistory.setUApprovedTimestamp(timestamp);
-//        mailService.sendMail("Fund Approved", u.getURequestReason(), Long.toString(amountRequested), u.getUEmail());
-//        pmoFundHistoryRepository.save(pmoFundHistory);
-//        return "redirect:/dashboard";
-//    }
-
     @GetMapping("/request/{fId}")
-    public String approveRequestAmount(@PathVariable("fId") Long fId, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) throws Exception {
+    public String approveRequestAmount(@PathVariable("fId") Long fId, @AuthenticationPrincipal UserDetail loggedMember) throws Exception {
 
         FundingDetails requestedFundDetails = fundingDetailsRepository.getById(fId);
         long requestedAmount = requestedFundDetails.getFRequestedAmount() / 86508; // INR to ETH
+        long approvedAmount = 0;
+        String transactionHash = "";
 
         User requestedUser = userRepository.getById(requestedFundDetails.getUId());
         User pmoUser = userRepository.findByEmail(loggedMember.getUsername());
 
-        userRepository.updateApprovedUserFunds("0", requestedUser.getUId());
-
         OrganizationDetails organizationDetails = new OrganizationDetails();
+
+        userRepository.updateApprovedUserFunds("0", requestedUser.getUId());
 
         if(requestedUser.getUCategory().equals("Patient")) {
             PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
@@ -255,17 +190,16 @@ public class GetResource {
             organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(victim.getVOrganizationId()));
         }
 
-        String senderAddress = userRepository.findByEmail(loggedMember.getUsername()).getUAddress();
-
         // Send transaction from the approver to the requester
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
         Credentials credentials = web3jClient.getCredentialsFromPrivateKey(pmoUser.getUPrivateKey());
-        Long approvedAmount = web3jClient.transferEthereum(web3j, pmoUser.getUAddress(), credentials, requestedFundDetails.getFAccountAddress(), requestedAmount);
+        Pair<Long, String> transactionDetail = web3jClient.transferEthereum(web3j, pmoUser.getUAddress(), credentials, requestedFundDetails.getFAccountAddress(), requestedAmount);
+        approvedAmount = transactionDetail.getFirst();
+        transactionHash = transactionDetail.getSecond();
 
         // Updating fund details and user details
         Timestamp timestamp = Timestamp.from(Instant.now());
-        fundingDetailsRepository.updateFundingDetails((approvedAmount * 86508), timestamp, fId);
-        System.out.println(Long.toString(Long.parseLong(requestedUser.getUCurrentOutstandingAmount()) + (approvedAmount * 86508)));
+        fundingDetailsRepository.updateFundingDetails((approvedAmount * 86508), timestamp, transactionHash, requestedFundDetails.getFAccountAddress(), fId);
         userRepository.updateApprovedUserFunds(Long.toString(Long.parseLong(requestedUser.getUCurrentOutstandingAmount()) + (approvedAmount * 86508)), requestedUser.getUId());
 
         // Sends the approved amount to a dummy account
@@ -298,20 +232,32 @@ public class GetResource {
 
     @GetMapping("/verification")
     public String getVerificationPage(Model model, @AuthenticationPrincipal UserDetail loggedUser) {
-        Map<String, Object> attributes = new HashMap<String, Object>();
+        boolean flag = false;
+        String buttonText = "";
         String email = loggedUser.getUsername();
+
+        Map<String, Object> attributes = new HashMap<>();
+
         User user = userRepository.findByEmail(email);
+
+        if(user.getUBankAccountNumber() == null) {
+            flag = true;
+            buttonText = "Profile not updated";
+        } else if(user.getUDisableVerification().compareTo("0") == 0) {
+            buttonText = "Submit for verification";
+
+        } else if(user.getUDisableVerification().compareTo("1") == 0){
+            flag = true;
+            buttonText = "Current Fund Request Pending";
+        }
+
         attributes.put("patient", new PatientDetails());
         attributes.put("pusr", new PublicServiceDetails());
         attributes.put("vctm", new VictimDetails());
-        if(user.getUDisableVerification().compareTo("0") == 0) {
-            attributes.put("disable", false);
-            attributes.put("buttonText", "Submit for verification");
-        } else {
-            attributes.put("disable", true);
-            attributes.put("buttonText", "Submit for verification");
-        }
+        attributes.put("disable", flag);
+        attributes.put("buttonText", buttonText);
         model.addAllAttributes(attributes);
+
         return "verification.html";
     }
 
@@ -323,7 +269,11 @@ public class GetResource {
     }
 
     @GetMapping("/myProfile")
-    public String getUserProfile(@AuthenticationPrincipal UserDetail loggedMember, Model model) {
+    public String getUserProfile(@AuthenticationPrincipal UserDetail loggedMember, Model model, RedirectAttributes redirectAttributes) {
+        if(loggedMember.getUsername() == null) {
+            redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
+            return "redirect:/login";
+        }
         User user = userRepository.findByEmail(loggedMember.getUsername());
         model.addAttribute("user", user);
         return "userprofile.html";
@@ -337,7 +287,11 @@ public class GetResource {
     }
 
     @GetMapping("/organizationRequests")
-    public String getRequestList(Model model, @AuthenticationPrincipal UserDetail loggedUser) {
+    public String getRequestList(Model model, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) {
+        if(loggedUser.getUsername() == null) {
+            redirectAttributes.addFlashAttribute("warning", "Please login to continue");
+            return "redirect:/login";
+        }
         User user = userRepository.findByEmail(loggedUser.getUsername());
         if(user.hasRole("PMO_PTNT")) {
             List<OrganizationDetails> requestList = organizationDetailsRepository.findAll();
@@ -364,13 +318,21 @@ public class GetResource {
     }
 
     @GetMapping("/contribute")
-    public String getContributePage(Model model) {
+    public String getContributePage(Model model, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) {
+        if(loggedMember.getUsername() == null) {
+            redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
+            return "redirect:/login";
+        }
         model.addAttribute("contributor", new ContributorDetails());
         return "contribute.html";
     }
 
     @GetMapping("/allContributions")
-    public String getAllContributions(Model model) {
+    public String getAllContributions(Model model, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) {
+        if(loggedMember.getUsername() == null) {
+            redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
+            return "redirect:/login";
+        }
         model.addAttribute("contributions_lists", contributorDetailsRepository.findAll() );
 //        model.addAttribute("contributions_lists_ptnt", contributorDetailsRepository.findAllByContributionFor("PMO_PTNT"));
 //        model.addAttribute("contributions_lists_pusr", contributorDetailsRepository.findAllByContributionFor("PMO_PUSR"));
@@ -379,8 +341,12 @@ public class GetResource {
     }
 
     @GetMapping("/allApprovedFunds")
-    public String getAllApprovedFunds(Model model) {
-        model.addAttribute("users_funds_lists", usersFundsRepository.findAllByApprovedStatus(1));
+    public String getAllApprovedFunds(Model model, @AuthenticationPrincipal UserDetail loggedMember, RedirectAttributes redirectAttributes) {
+        if(loggedMember.getUsername() == null) {
+            redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
+            return "redirect:/login";
+        }
+        model.addAttribute("fundDetails", fundingDetailsRepository.findAll());
         return "all_approved_funds.html";
     }
 }

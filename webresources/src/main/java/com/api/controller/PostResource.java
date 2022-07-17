@@ -6,11 +6,8 @@ import com.api.repository.*;
 
 import com.api.security.UserDetail;
 import com.api.services.MailService;
-import com.api.services.OtpService;
-import com.api.services.SMSService;
 import com.api.services.ValidationService;
 import com.api.utils.AddressPrivateKeyMap;
-import com.api.utils.Addresses;
 import kotlin.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -29,6 +26,7 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -66,13 +64,7 @@ public class PostResource {
     private ContributorDetailsRepository contributorDetailsRepository;
 
     @Autowired
-    private AddressLogRepository addressLogRepository;
-
-    @Autowired
     private FundingDetailsRepository fundingDetailsRepository;
-
-    @Autowired
-    private OtpRepository otpRepository;
 
     @Autowired
     private ValidationService validationService;
@@ -81,23 +73,28 @@ public class PostResource {
     private MailService mailService;
 
     @Autowired
-    private OtpService otpService;
-
-    @Autowired
-    private SMSService smsService;
-
-    @Autowired
     private Web3jClient web3jClient;
-
-    private User tempUser;
-
-    private static User user;
 
     @PostMapping("/registered")
     public String createUser(@Valid User user, RedirectAttributes redirectAttributes, Model model, HttpSession session) throws ExecutionException, InterruptedException {
         List<User> users = userRepository.findAll();
+        List<User> pmoUsers = new ArrayList<>();
+        for(User u : users) {
+            if(u.hasRole("PMO_PTNT")) {
+                pmoUsers.add(u);
+            }
+            if(u.hasRole("PMO_VCTM")) {
+                pmoUsers.add(u);
+            }
+            if(u.hasRole("PMO_PUSR")) {
+                pmoUsers.add(u);
+            }
+            if(u.hasRole("CONTRIBUTOR")) {
+                pmoUsers.add(u);
+            }
+        }
         User u = userRepository.findByAadhaar(user.getUAadhaar());
-        Pair<String, String> addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+        Pair<String, String> addressKeyPair;
         if(u == null) {
             Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
             if(!validationService.isValid(Long.toString(user.getUAadhaar()))) {
@@ -115,7 +112,7 @@ public class PostResource {
 
             if(user.getUCategory().equals("PMO_PTNT")) {
                 while(true) {
-                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(pmoUsers);
                     if (Long.parseLong(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 100) {
                         break;
                     }
@@ -127,7 +124,7 @@ public class PostResource {
                 user.addRole(roles);
             } else if(user.getUCategory().equals("PMO_PUSR")) {
                 while(true) {
-                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(pmoUsers);
                     if (Long.parseLong(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 100) {
                         break;
                     }
@@ -151,7 +148,7 @@ public class PostResource {
                 user.addRole(roles);
             } else if(user.getUCategory().equals("CONTRIBUTOR")) {
                 while(true) {
-                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(users);
+                    addressKeyPair = AddressPrivateKeyMap.getNewKeyPair(pmoUsers);
                     if (Long.parseLong(web3jClient.getBalance(web3j, addressKeyPair.getFirst())) > 100) {
                         break;
                     }
@@ -213,46 +210,6 @@ public class PostResource {
         return "redirect:/requestFunds";
     }
 
-//    @PostMapping("/verified_ptnt")
-//    public String verifyPatientDetails(@Valid PatientDetails patientDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
-//        String pmEmail = "";
-//        String email = loggedUser.getUsername();
-//        Timestamp timestamp = Timestamp.from(Instant.now());
-//        User user = userRepository.findByEmail(email);
-//        List<User> users = userRepository.findAll();
-//        UsersFunds usersFunds = new UsersFunds();
-//        patientDetails.setUId(user.getUId());
-//        for(User u : users) {
-//            if(u.hasRole("PMO_PTNT")) {
-//                pmEmail = u.getUEmail();
-//            } else if(u.hasRole("PMO_VCTM")) {
-//                pmEmail = u.getUEmail();
-//            } else if(u.hasRole("PMO_PUSR")) {
-//                pmEmail = u.getUEmail();
-//            }
-//        }
-//        if(web3jClient.isValidated(patientDetails, null, null, true)) {
-//            userRepository.updateUserApprovedStatus("0", email);
-//            patientDetails.setUApproveStatus("0");
-//            patientDetailsRepository.save(patientDetails);
-//            usersFunds.setUFirstName(user.getUFirstName());
-//            user.setUCurrentRequestedAmount(usersFunds.getUFundsHistory());
-//            usersFunds.setUId(user.getUId());
-//            usersFunds.setUFundsHistory(patientDetails.getPFundNeed());
-//            usersFunds.setUReason(patientDetails.getPCaseType());
-//            usersFunds.setURequestTimestamp(timestamp);
-//            usersFunds.setUIsApproved(0);
-//            usersFundsRepository.save(usersFunds);
-//            userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), patientDetails.getPFundNeed(), patientDetails.getPCaseType(), patientDetails.getUId());
-//            userRepository.updateUserDisableVerification("1", user.getUId());
-//            redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
-//            mailService.sendMail("Fund Request Verification", null, patientDetails.getPCaseType(), pmEmail);
-//            return "redirect:/verification";
-//        }
-//        redirectAttributes.addFlashAttribute("warning", "Invalid Request. Fill in correct details");
-//        return "redirect:/verification";
-//    }
-
     @PostMapping("/verified_ptnt")
     public String verifyPatientDetailsResource(@Valid PatientDetails patientDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
         String pmEmail = "";
@@ -300,42 +257,6 @@ public class PostResource {
         return "redirect:/verification";
     }
 
-//    @PostMapping("/verified_vctm")
-//    public String verifyVictimDetails(@Valid VictimDetails victimDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
-//        String pmEmail = "";
-//        String email = loggedUser.getUsername();
-//        Timestamp timestamp = Timestamp.from(Instant.now());
-//        User user = userRepository.findByEmail(email);
-//        List<User> users = userRepository.findAll();
-//        UsersFunds usersFunds = new UsersFunds();
-//        victimDetails.setUId(user.getUId());
-//        for(User u : users) {
-//            if(u.hasRole("PMO")) {
-//                pmEmail = u.getUEmail();
-//            }
-//        }
-//        if(web3jClient.isValidated(null, null, victimDetails, true)) {
-//            userRepository.updateUserApprovedStatus("0", email);
-//            victimDetails.setUApproveStatus("0");
-//            victimDetailsRepository.save(victimDetails);
-//            usersFunds.setUFirstName(user.getUFirstName());
-//            user.setUCurrentRequestedAmount(usersFunds.getUFundsHistory());
-//            usersFunds.setUId(user.getUId());
-//            usersFunds.setUFundsHistory(victimDetails.getVFundNeed());
-//            usersFunds.setUReason(victimDetails.getVCaseType());
-//            usersFunds.setURequestTimestamp(timestamp);
-//            usersFunds.setUIsApproved(0);
-//            usersFundsRepository.save(usersFunds);
-//            userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), victimDetails.getVFundNeed(), victimDetails.getVCaseType(), victimDetails.getUId());
-//            userRepository.updateUserDisableVerification("1", user.getUId());
-//            redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
-//            mailService.sendMail("Fund Request Verification", null, victimDetails.getVCaseType(), pmEmail);
-//            return "redirect:/verification";
-//        }
-//        redirectAttributes.addFlashAttribute("warning", "Invalid Request. Fill in correct details");
-//        return "redirect:/verification";
-//    }
-
     @PostMapping("/verified_vctm")
     public String verifyVictimDetails(@Valid VictimDetails victimDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
         String pmEmail = "";
@@ -382,42 +303,6 @@ public class PostResource {
         redirectAttributes.addFlashAttribute("warning", "Invalid Request. Fill in correct details");
         return "redirect:/verification";
     }
-
-//    @PostMapping("/verified_pusr")
-//    public String verifyPublicServiceDetails(@Valid PublicServiceDetails publicServiceDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
-//        String pmEmail = "";
-//        String email = loggedUser.getUsername();
-//        Timestamp timestamp = Timestamp.from(Instant.now());
-//        User user = userRepository.findByEmail(email);
-//        List<User> users = userRepository.findAll();
-//        UsersFunds usersFunds = new UsersFunds();
-//        publicServiceDetails.setUId(user.getUId());
-//        for(User u : users) {
-//            if(u.hasRole("PMO")) {
-//                pmEmail = u.getUEmail();
-//            }
-//        }
-//        if(web3jClient.isValidated(null, publicServiceDetails, null, true)) {
-//            userRepository.updateUserApprovedStatus("0", email);
-//            publicServiceDetails.setUApproveStatus("0");
-//            publicServiceDetailsRepository.save(publicServiceDetails);
-//            usersFunds.setUFirstName(user.getUFirstName());
-//            user.setUCurrentRequestedAmount(usersFunds.getUFundsHistory());
-//            usersFunds.setUId(user.getUId());
-//            usersFunds.setUFundsHistory(publicServiceDetails.getPUFundNeed());
-//            usersFunds.setUReason(publicServiceDetails.getPUServiceType());
-//            usersFunds.setURequestTimestamp(timestamp);
-//            usersFunds.setUIsApproved(0);
-//            usersFundsRepository.save(usersFunds);
-//            userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), publicServiceDetails.getPUFundNeed(), publicServiceDetails.getPUServiceType(), publicServiceDetails.getUId());
-//            userRepository.updateUserDisableVerification("1", user.getUId());
-//            redirectAttributes.addFlashAttribute("message", "Request is Verified. Check Account frequently within 3 days.");
-//            mailService.sendMail("Fund Request Verification", null, publicServiceDetails.getPUServiceType(), pmEmail);
-//            return "redirect:/verification";
-//        }
-//        redirectAttributes.addFlashAttribute("warning", "Invalid Request. Fill in correct details");
-//        return "redirect:/verification";
-//    }
 
     @PostMapping("/verified_pusr")
     public String verifyPublicServiceDetails(@Valid PublicServiceDetails publicServiceDetails, @AuthenticationPrincipal UserDetail loggedUser, RedirectAttributes redirectAttributes) throws Exception {
@@ -479,7 +364,7 @@ public class PostResource {
         }
         userRepository.updateUser(user.getUFirstName(), user.getULastName(), user.getUEmail(), user.getUPhone(), user.getUAadhaar(), user.getUPan(), user.getUDob(), user.getUBankAccountNumber(), user.getUIFSCCode(), user.getUId());
         redirectAttributes.addFlashAttribute("message", "Profile Updated");
-        return "redirect:/myProfile";
+        return "redirect:/account/"+user.getUId();
     }
 
 

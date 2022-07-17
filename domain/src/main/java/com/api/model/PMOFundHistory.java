@@ -1,39 +1,37 @@
 package com.api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
 @Table(name = "pmo_fund_history")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PMOFundHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Getter @Setter Long pFId;
+    private Long pFId;
 
     @Column(nullable = false)
-    private @Getter @Setter Long uId;
+    private Long uId;
 
     @Column(nullable = false)
-    private @Getter @Setter String pFApprovedAmount;
+    private String pFApprovedAmount;
 
     @Column(nullable = false)
-    private @Getter @Setter String pFApprovedFundReason;
+    private String pFApprovedFundReason;
 
     @Column(nullable = false)
-    private @Getter @Setter String pFApprovedFundStatus;
+    private String pFApprovedFundStatus;
 
     @Column(nullable = false)
-    private @Getter @Setter Timestamp uRequestTimestamp;
+    private Timestamp uRequestTimestamp;
 
     @Column(nullable = true)
-    private @Getter @Setter Timestamp uApprovedTimestamp;
+    private Timestamp uApprovedTimestamp;
 
 }

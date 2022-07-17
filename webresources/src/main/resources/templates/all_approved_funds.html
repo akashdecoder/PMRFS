@@ -30,7 +30,7 @@
                     <a class="nav-link" href="/approveFunds">Approve Funds</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/myProfile">My Profile</a>
+                    <a class="nav-link" th:href="@{/account/{uId}(uId=${uId})}"><b>My Profile</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
@@ -60,7 +60,24 @@
         </div>
         <br>
         <br>
-        <div class="table-responsive">
+
+        <div class="row">
+            <div class="col-sm-6" th:each="fund: ${fundDetails}">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title" th:text="${fund.fRequestReason}"></h5>
+                  <p class="card-text" th:text="'Address Used: ' + ${fund.fAccountAddressUsed}"></p>
+                  <p class="card-text" th:text="'Requested Amount: ' + ${fund.fRequestedAmount}"></p>
+                  <p class="card-text" th:text="'Requested Timestamp: ' + ${fund.fRequestedTimestamp}"></p>
+                  <p class="card-text" th:text="'Approved Amount: ' + ${fund.fApprovedAmount}"></p>
+                  <p class="card-text" th:text="'Approved Timestamp' + ${fund.fApprovedTimestamp}"></p>
+                  <p class="card-text" th:text="'Transaction Hash: ' + ${fund.fTransactionHash}"></p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <!-- <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -83,7 +100,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
@@ -109,7 +126,7 @@
                     <a class="nav-link" href="/approveFunds">Approve Funds</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/myProfile">My Profile</a>
+                    <a class="nav-link" th:href="@{/account/{uId}(uId=${uId})}"><b>My Profile</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
@@ -139,7 +156,22 @@
         </div>
         <br>
         <br>
-        <div class="table-responsive">
+        <div class="row">
+            <div class="col-sm-6" th:each="fund: ${fundDetails}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${fund.fRequestReason}"></h5>
+                        <p class="card-text" th:text="'Address Used: ' + ${fund.fAccountAddressUsed}"></p>
+                        <p class="card-text" th:text="'Requested Amount: ' + ${fund.fRequestedAmount}"></p>
+                        <p class="card-text" th:text="'Requested Timestamp: ' + ${fund.fRequestedTimestamp}"></p>
+                        <p class="card-text" th:text="'Approved Amount: ' + ${fund.fApprovedAmount}"></p>
+                        <p class="card-text" th:text="'Approved Timestamp' + ${fund.fApprovedTimestamp}"></p>
+                        <p class="card-text" th:text="'Transaction Hash: ' + ${fund.fTransactionHash}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -162,7 +194,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
@@ -188,7 +220,7 @@
                     <a class="nav-link" href="/approveFunds">Approve Funds</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/myProfile">My Profile</a>
+                    <a class="nav-link" th:href="@{/account/{uId}(uId=${uId})}"><b>My Profile</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/organizationRequests"><b>Organization Request</b></a>
@@ -218,7 +250,22 @@
         </div>
         <br>
         <br>
-        <div class="table-responsive">
+        <div class="row">
+            <div class="col-sm-6" th:each="fund: ${fundDetails}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${fund.fRequestReason}"></h5>
+                        <p class="card-text" th:text="'Address Used: ' + ${fund.fAccountAddressUsed}"></p>
+                        <p class="card-text" th:text="'Requested Amount: ' + ${fund.fRequestedAmount}"></p>
+                        <p class="card-text" th:text="'Requested Timestamp: ' + ${fund.fRequestedTimestamp}"></p>
+                        <p class="card-text" th:text="'Approved Amount: ' + ${fund.fApprovedAmount}"></p>
+                        <p class="card-text" th:text="'Approved Timestamp' + ${fund.fApprovedTimestamp}"></p>
+                        <p class="card-text" th:text="'Transaction Hash: ' + ${fund.fTransactionHash}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -241,7 +288,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
@@ -266,7 +313,7 @@
                     <a class="nav-link" href="/requestFunds">Fund Request</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                    <a class="nav-link" th:href="@{/account/{uId}(uId=${uId})}"><b>My Profile</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/verification"><b>Verification</b></a>
@@ -299,7 +346,22 @@
         </div>
         <br>
         <br>
-        <div class="table-responsive">
+        <div class="row">
+            <div class="col-sm-6" th:each="fund: ${fundDetails}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${fund.fRequestReason}"></h5>
+                        <p class="card-text" th:text="'Address Used: ' + ${fund.fAccountAddressUsed}"></p>
+                        <p class="card-text" th:text="'Requested Amount: ' + ${fund.fRequestedAmount}"></p>
+                        <p class="card-text" th:text="'Requested Timestamp: ' + ${fund.fRequestedTimestamp}"></p>
+                        <p class="card-text" th:text="'Approved Amount: ' + ${fund.fApprovedAmount}"></p>
+                        <p class="card-text" th:text="'Approved Timestamp' + ${fund.fApprovedTimestamp}"></p>
+                        <p class="card-text" th:text="'Transaction Hash: ' + ${fund.fTransactionHash}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -322,7 +384,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
@@ -349,7 +411,7 @@
                     <a class="nav-link" href="/requestFunds">Fund Request</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                    <a class="nav-link" th:href="@{/account/{uId}(uId=${uId})}"><b>My Profile</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/verification"><b>Verification</b></a>
@@ -382,7 +444,22 @@
         </div>
         <br>
         <br>
-        <div class="table-responsive">
+        <div class="row">
+            <div class="col-sm-6" th:each="fund: ${fundDetails}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${fund.fRequestReason}"></h5>
+                        <p class="card-text" th:text="'Address Used: ' + ${fund.fAccountAddressUsed}"></p>
+                        <p class="card-text" th:text="'Requested Amount: ' + ${fund.fRequestedAmount}"></p>
+                        <p class="card-text" th:text="'Requested Timestamp: ' + ${fund.fRequestedTimestamp}"></p>
+                        <p class="card-text" th:text="'Approved Amount: ' + ${fund.fApprovedAmount}"></p>
+                        <p class="card-text" th:text="'Approved Timestamp' + ${fund.fApprovedTimestamp}"></p>
+                        <p class="card-text" th:text="'Transaction Hash: ' + ${fund.fTransactionHash}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -405,7 +482,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
@@ -432,7 +509,7 @@
                     <a class="nav-link" href="/requestFunds">Fund Request</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/myProfile"><b>My Profile</b></a>
+                    <a class="nav-link" th:href="@{/account/{uId}(uId=${uId})}"><b>My Profile</b></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/verification"><b>Verification</b></a>
@@ -465,7 +542,22 @@
         </div>
         <br>
         <br>
-        <div class="table-responsive">
+        <div class="row">
+            <div class="col-sm-6" th:each="fund: ${fundDetails}">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${fund.fRequestReason}"></h5>
+                        <p class="card-text" th:text="'Address Used: ' + ${fund.fAccountAddressUsed}"></p>
+                        <p class="card-text" th:text="'Requested Amount: ' + ${fund.fRequestedAmount}"></p>
+                        <p class="card-text" th:text="'Requested Timestamp: ' + ${fund.fRequestedTimestamp}"></p>
+                        <p class="card-text" th:text="'Approved Amount: ' + ${fund.fApprovedAmount}"></p>
+                        <p class="card-text" th:text="'Approved Timestamp' + ${fund.fApprovedTimestamp}"></p>
+                        <p class="card-text" th:text="'Transaction Hash: ' + ${fund.fTransactionHash}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <div class="table-responsive">
             <table  class="table table-striped table-bordered">
                 <thead class="thead-dark">
                 <tr>
@@ -488,7 +580,7 @@
                 </tr>
                 </tbody>
             </table>
-        </div>
+        </div> -->
     </div>
 </div>
 <a href="#" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>

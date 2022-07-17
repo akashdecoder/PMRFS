@@ -1,50 +1,48 @@
 package com.api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "patient_details")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Getter @Setter Long pId;
+    private Long pId;
 
     @Column(nullable = false)
-    private @Getter @Setter Long uId;
+    private Long uId;
 
     @Column(nullable = false)
-    private @Getter @Setter String pAadhaar;
+    private String pAadhaar;
 
     @Column(nullable = false)
-    private @Getter @Setter String pPan;
+    private String pPan;
 
     @Column(nullable = false)
-    private @Getter @Setter String pOccupation;
+    private String pOccupation;
 
     @Column(nullable = false)
-    private @Getter @Setter String pFundNeed;
+    private String pFundNeed;
 
     @Column(nullable = false)
-    private @Getter @Setter String pCaseType;
+    private String pCaseType;
 
     @Column(nullable = false)
-    private @Getter @Setter String pHospitalFundRequestId;
+    private String pHospitalFundRequestId;
 
     @Column(nullable = false)
-    private @Getter @Setter String pIncomeId;
+    private String pIncomeId;
 
     @Column(nullable = false, columnDefinition = "int default 0")
-    private @Getter @Setter int pAttempts;
+    private int pAttempts;
 
     @Column(nullable = false)
-    private @Getter @Setter String uApproveStatus;
+    private String uApproveStatus;
 
 }

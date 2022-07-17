@@ -1,46 +1,44 @@
 package com.api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "public_service_details")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class PublicServiceDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Getter @Setter Long pUId;
+    private Long pUId;
 
     @Column(nullable = false)
-    private @Getter @Setter Long uId;
+    private Long uId;
 
     @Column(nullable = false)
-    private @Getter @Setter String pUAadhaar;
+    private String pUAadhaar;
 
     @Column(nullable = false)
-    private @Getter @Setter String pUPan;
+    private String pUPan;
 
     @Column(nullable = false)
-    private @Getter @Setter String pUFundNeed;
+    private  String pUFundNeed;
 
     @Column(nullable = false)
-    private @Getter @Setter String pUEmployees;
+    private String pUEmployees;
 
     @Column(nullable = false)
-    private @Getter @Setter String pUServiceType;
+    private String pUServiceType;
 
     @Column(nullable = false)
-    private @Getter @Setter String pUOfficialConsentId;
+    private String pUOfficialConsentId;
 
     @Column(nullable = false, columnDefinition = "int default 0")
-    private @Getter @Setter int pAttempts;
+    private int pAttempts;
 
     @Column(nullable = false)
-    private @Getter @Setter String uApproveStatus;
+    private String uApproveStatus;
 }

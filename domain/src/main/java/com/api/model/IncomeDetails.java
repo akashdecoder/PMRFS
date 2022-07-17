@@ -1,28 +1,26 @@
 package com.api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "income_details")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class IncomeDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Getter @Setter Long iId;
+    private Long iId;
 
     @Column(nullable = false)
-    private @Getter @Setter Long iIncomeId;
+    private Long iIncomeId;
 
     @Column(nullable = false)
-    private @Getter @Setter String iIncome;
+    private String iIncome;
 
     @Column(nullable = false)
-    private @Getter @Setter String uAadhaar;
+    private String uAadhaar;
 }

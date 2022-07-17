@@ -39,4 +39,12 @@ public class FundingDetails {
 
     @Column(nullable = true)
     private String fAccountAddress;
+
+    @Column(nullable = true)
+    private String fTransactionHash;
+
+    @Column(nullable = true)
+    private String fAccountAddressUsed;
+
+
 }

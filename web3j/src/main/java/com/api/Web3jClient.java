@@ -4,6 +4,7 @@ import com.api.model.PatientDetails;
 import com.api.model.PublicServiceDetails;
 import com.api.model.VictimDetails;
 import com.api.validationcontractmodel.PmCare;
+import kotlin.Pair;
 import org.springframework.stereotype.Service;
 import org.web3j.crypto.Credentials;
 import org.web3j.protocol.Web3j;
@@ -18,6 +19,7 @@ import org.web3j.utils.Convert;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -30,8 +32,9 @@ public class Web3jClient {
         return Credentials.create(privateKey);
     }
 
-    public Long transferEthereum(Web3j web3j, String sender, Credentials credentials, String recipient, long value) throws Exception {
+    public Pair<Long, String> transferEthereum(Web3j web3j, String sender, Credentials credentials, String recipient, long value) throws Exception {
 
+        Pair<Long, String> transactionDetail;
         if(value > Long.parseLong(getBalance(web3j, sender))) {
             value = Long.parseLong(getBalance(web3j,sender)) - 1;
         }
@@ -48,8 +51,8 @@ public class Web3jClient {
                 GAS_PRICE,
                 GAS_LIMIT
         ).send();
-        System.out.print("Transaction = " + transactionReceipt.getTransactionHash());
-        return value;
+        transactionDetail = new Pair<>(value, transactionReceipt.getTransactionHash());
+        return transactionDetail;
     }
 
     public void transferEthereum(Web3j web3j, Credentials credentials, String recipient, long value) throws Exception {

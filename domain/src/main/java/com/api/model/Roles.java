@@ -1,14 +1,12 @@
 package com.api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Roles {
@@ -16,9 +14,9 @@ public class Roles {
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private @Getter @Setter Long rId;
+    private Long rId;
 
     @Column
-    private @Getter @Setter String rName;
+    private String rName;
 
 }

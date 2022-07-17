@@ -14,8 +14,8 @@ public interface FundingDetailsRepository extends JpaRepository<FundingDetails, 
 
     @Transactional
     @Modifying
-    @Query(value = "update funding_details set f_approved_amount = ?1, f_approved_timestamp = ?2 where f_id = ?3", nativeQuery = true)
-    public void updateFundingDetails(Long approvedAmount, Timestamp approvedTimestamp, Long fId);
+    @Query(value = "update funding_details set f_approved_amount = ?1, f_approved_timestamp = ?2, f_transaction_hash = ?3, f_account_address_used = ?4 where f_id = ?5", nativeQuery = true)
+    public void updateFundingDetails(Long approvedAmount, Timestamp approvedTimestamp, String transactionHash, String accountAddressUsed, Long fId);
 
     @Transactional
     @Modifying
