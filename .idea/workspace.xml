@@ -13,12 +13,19 @@
       <change beforePath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../../Blockchain/target/surefire-reports/org.blockchain.AppTest.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" beforeDir="false" afterPath="$PROJECT_DIR$/../../EthereumTransactions_Web3J" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/model/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/model/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/java/com/api/repository/UserRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/MailService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/MailService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/ValidationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/src/main/java/com/api/services/ValidationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/domain/target/classes/com/api/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/MailService$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/MailService$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/MailService.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/MailService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/ValidationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/service-providers/target/classes/com/api/services/ValidationService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/GetResource.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/java/com/api/controller/PostResource.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_approved_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/all_approved_funds.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/src/main/resources/templates/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/src/main/resources/templates/update_profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/GetResource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/com/api/controller/PostResource.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/all_approved_funds.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/all_approved_funds.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webresources/target/classes/templates/update_profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/webresources/target/classes/templates/update_profile.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

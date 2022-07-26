@@ -96,9 +96,10 @@ public class GetResource {
     }
 
     @GetMapping("/dashboard")
-    public String showMemberDashboard(@AuthenticationPrincipal UserDetail loggedMember, Model model, RedirectAttributes redirectAttributes) {
+    public String showMemberDashboard(@AuthenticationPrincipal UserDetail loggedMember, Model model, RedirectAttributes redirectAttributes) throws ExecutionException, InterruptedException {
         Map<String, Object> attributes = new HashMap<String, Object>();
         User user = userRepository.findByEmail(loggedMember.getUsername());
+        Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
         if(user.getUBankAccountNumber() == null) {
             if(user.hasRole("PTNT") || user.hasRole("VCTM") || user.hasRole("PUSR")) {
                 model.addAttribute("warning", "Please update your bank account number and IFSC code");
@@ -123,7 +124,12 @@ public class GetResource {
 
         attributes.put("fundDetails", approvedFunds); // For PMO
         attributes.put("users", usersFunds); // For other roles
-        attributes.put("fund", userRepository.findByEmail(loggedMember.getUsername()).getUCurrentOutstandingAmount()); // For other roles
+        if(user.hasRole("PMO_PTNT") || user.hasRole("PMO_VCTM") || user.hasRole("PMO_PUSR") || user.hasRole("CONTRIBUTOR")) {
+            attributes.put("fund", web3jClient.getBalance(web3j, user.getUAddress())); // For PMO and Contributor
+        } else {
+            attributes.put("fund", userRepository.findByEmail(loggedMember.getUsername()).getUCurrentOutstandingAmount()); // For other roles
+        }
+
         attributes.put("contributions", contributorDetailsList);
         attributes.put("contributions_lists", contributorDetailsRepository.findAll());
         attributes.put("uId", user.getUId());

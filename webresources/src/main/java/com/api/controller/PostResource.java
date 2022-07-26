@@ -393,7 +393,8 @@ public class PostResource {
                 if(contributorDetails.getCContributionFor().equals("PMO_PTNT")) {
                     pmo = userRepository.findUserByCategory("PMO_PTNT");
                     web3jClient.transferEthereum(web3j, credentials, pmo.getUAddress(), Long.parseLong(contributorDetails.getCAmount()));
-                    userRepository.updateUserFunds(user.getUCurrentOutstandingAmount(), null, null, user.getUId());
+                    userRepository.updateUserFunds(web3jClient.getBalance(web3j, user.getUAddress()), null, null, user.getUId());
+                    userRepository.updateUserFunds(web3jClient.getBalance(web3j, pmo.getUAddress()), null, null, user.getUId());
                     contributorDetailsRepository.save(contributorDetails);
                     mailService.sendMail("Contribution", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor(), user.getUEmail());
                     mailService.sendMail("Contribution PMO", user.getUFirstName() + " " + user.getULastName(), contributorDetails.getCContributionFor() + "with amount: " + contributorDetails.getCAmount(), pmo.getUEmail());
