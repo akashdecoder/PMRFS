@@ -2,7 +2,7 @@ package com.api.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "patient_details")
