@@ -1,11 +1,7 @@
 package com.api.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.*;
+import lombok.*;
+import jakarta.persistence.*;
 import java.sql.Timestamp;
 
 @AllArgsConstructor

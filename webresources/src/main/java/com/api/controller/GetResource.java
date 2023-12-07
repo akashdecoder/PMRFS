@@ -1,12 +1,11 @@
 package com.api.controller;
 
 
-import com.api.Web3jClient;
+import com.api.dependencycontainer.RepositoryDependencyContainer;
+import com.api.dependencycontainer.ServiceDependencyContainer;
 import com.api.model.*;
-import com.api.repository.*;
 
 import com.api.security.UserDetail;
-import com.api.services.MailService;
 import com.api.utils.AddressPrivateKeyMap;
 import kotlin.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,48 +31,14 @@ import java.util.concurrent.ExecutionException;
 @Controller
 public class GetResource {
 
-    @Autowired
-    private UserRepository userRepository;
-
-
-    @Autowired
-    private UsersFundsRepository usersFundsRepository;
+    private final RepositoryDependencyContainer repositoryDependencyContainer;
+    private final ServiceDependencyContainer serviceDependencyContainer;
 
     @Autowired
-    private RolesRepository rolesRepository;
-
-    @Autowired
-    private PatientDetailsRepository patientDetailsRepository;
-
-    @Autowired
-    private PublicServiceDetailsRepository publicServiceDetailsRepository;
-
-    @Autowired
-    private VictimDetailsRepository victimDetailsRepository;
-
-    @Autowired
-    private PMOFundHistoryRepository pmoFundHistoryRepository;
-
-    @Autowired
-    private AadhaarDetailsRepository aadhaarDetailsRepository;
-
-    @Autowired
-    private OrganizationDetailsRepository organizationDetailsRepository;
-
-    @Autowired
-    private IncomeDetailsRepository incomeDetailsRepository;
-
-    @Autowired
-    private ContributorDetailsRepository contributorDetailsRepository;
-
-    @Autowired
-    private FundingDetailsRepository fundingDetailsRepository;
-
-    @Autowired
-    private Web3jClient web3jClient;
-
-    @Autowired
-    private MailService mailService;
+    public GetResource(RepositoryDependencyContainer repositoryDependencyContainer, ServiceDependencyContainer serviceDependencyContainer) {
+        this.repositoryDependencyContainer = repositoryDependencyContainer;
+        this.serviceDependencyContainer = serviceDependencyContainer;
+    }
 
     @GetMapping("/register")
     public String viewForm(Model model) {
@@ -98,14 +63,14 @@ public class GetResource {
     @GetMapping("/dashboard")
     public String showMemberDashboard(@AuthenticationPrincipal UserDetail loggedMember, Model model, RedirectAttributes redirectAttributes) throws ExecutionException, InterruptedException {
         Map<String, Object> attributes = new HashMap<String, Object>();
-        User user = userRepository.findByEmail(loggedMember.getUsername());
+        User user = repositoryDependencyContainer.getUserRepository().findByEmail(loggedMember.getUsername());
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
         if(user.getUBankAccountNumber() == null) {
             if(user.hasRole("PTNT") || user.hasRole("VCTM") || user.hasRole("PUSR")) {
                 model.addAttribute("warning", "Please update your bank account number and IFSC code");
             }
         }
-        List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
+        List<FundingDetails> fundingDetailsList = repositoryDependencyContainer.getFundingDetailsRepository().findAll();
         List<FundingDetails> approvedFunds = new ArrayList<>();
         List<FundingDetails> usersFunds = new ArrayList<>();
         for(FundingDetails details : fundingDetailsList) {
@@ -120,18 +85,18 @@ public class GetResource {
             }
         }
 
-        List<ContributorDetails> contributorDetailsList = contributorDetailsRepository.findAllByName(user.getUFirstName()+" "+user.getULastName());
+        List<ContributorDetails> contributorDetailsList = repositoryDependencyContainer.getContributorDetailsRepository().findAllByName(user.getUFirstName()+" "+user.getULastName());
 
         attributes.put("fundDetails", approvedFunds); // For PMO
         attributes.put("users", usersFunds); // For other roles
         if(user.hasRole("PMO_PTNT") || user.hasRole("PMO_VCTM") || user.hasRole("PMO_PUSR") || user.hasRole("CONTRIBUTOR")) {
-            attributes.put("fund", web3jClient.getBalance(web3j, user.getUAddress())); // For PMO and Contributor
+            attributes.put("fund", serviceDependencyContainer.getWeb3jClient().getBalance(web3j, user.getUAddress())); // For PMO and Contributor
         } else {
-            attributes.put("fund", userRepository.findByEmail(loggedMember.getUsername()).getUCurrentOutstandingAmount()); // For other roles
+            attributes.put("fund", repositoryDependencyContainer.getUserRepository().findByEmail(loggedMember.getUsername()).getUCurrentOutstandingAmount()); // For other roles
         }
 
         attributes.put("contributions", contributorDetailsList);
-        attributes.put("contributions_lists", contributorDetailsRepository.findAll());
+        attributes.put("contributions_lists", repositoryDependencyContainer.getContributorDetailsRepository().findAll());
         attributes.put("uId", user.getUId());
         model.addAllAttributes(attributes);
         return "dashboard";
@@ -143,20 +108,20 @@ public class GetResource {
             redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
             return "redirect:/login";
         }
-        List<FundingDetails> fundingDetailsList = fundingDetailsRepository.findAll();
+        List<FundingDetails> fundingDetailsList = repositoryDependencyContainer.getFundingDetailsRepository().findAll();
         List<FundingDetails> requestedFundsPtnt = new ArrayList<>();
         List<FundingDetails> requestedFundsPusr = new ArrayList<>();
         List<FundingDetails> requestedFundsVctm = new ArrayList<>();
         for(FundingDetails details : fundingDetailsList) {
-            if(userRepository.getById(details.getUId()).hasRole("PTNT")) {
+            if(repositoryDependencyContainer.getUserRepository().getById(details.getUId()).hasRole("PTNT")) {
                 if(details.getFApprovedAmount() == null) {
                     requestedFundsPtnt.add(details);
                 }
-            } else if(userRepository.getById(details.getUId()).hasRole("PUSR")) {
+            } else if(repositoryDependencyContainer.getUserRepository().getById(details.getUId()).hasRole("PUSR")) {
                 if(details.getFApprovedAmount() == null) {
                     requestedFundsPusr.add(details);
                 }
-            } else if(userRepository.getById(details.getUId()).hasRole("VCTM")) {
+            } else if(repositoryDependencyContainer.getUserRepository().getById(details.getUId()).hasRole("VCTM")) {
                 if(details.getFApprovedAmount() == null) {
                     requestedFundsVctm.add(details);
                 }
@@ -171,55 +136,55 @@ public class GetResource {
     @GetMapping("/request/{fId}")
     public String approveRequestAmount(@PathVariable("fId") Long fId, @AuthenticationPrincipal UserDetail loggedMember) throws Exception {
 
-        FundingDetails requestedFundDetails = fundingDetailsRepository.getById(fId);
+        FundingDetails requestedFundDetails = repositoryDependencyContainer.getFundingDetailsRepository().getById(fId);
         long requestedAmount = requestedFundDetails.getFRequestedAmount() / 86508; // INR to ETH
         long approvedAmount = 0;
         String transactionHash = "";
 
-        User requestedUser = userRepository.getById(requestedFundDetails.getUId());
-        User pmoUser = userRepository.findByEmail(loggedMember.getUsername());
+        User requestedUser = repositoryDependencyContainer.getUserRepository().getById(requestedFundDetails.getUId());
+        User pmoUser = repositoryDependencyContainer.getUserRepository().findByEmail(loggedMember.getUsername());
 
         OrganizationDetails organizationDetails = new OrganizationDetails();
 
-        userRepository.updateApprovedUserFunds("0", requestedUser.getUId());
+        repositoryDependencyContainer.getUserRepository().updateApprovedUserFunds("0", requestedUser.getUId());
 
         if(requestedUser.getUCategory().equals("Patient")) {
-            PatientDetails patient = patientDetailsRepository.findPatientDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
-            patientDetailsRepository.updatePatientDetails("1", patient.getPId());
-            organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(patient.getPHospitalFundRequestId()));
+            PatientDetails patient = repositoryDependencyContainer.getPatientDetailsRepository().findPatientDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
+            repositoryDependencyContainer.getPatientDetailsRepository().updatePatientDetails("1", patient.getPId());
+            organizationDetails = repositoryDependencyContainer.getOrganizationDetailsRepository().getByRequestId(Long.parseLong(patient.getPHospitalFundRequestId()));
         } else if(requestedUser.getUCategory().equals("Public Services")) {
-            PublicServiceDetails publicService = publicServiceDetailsRepository.findPublicServiceDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
-            publicServiceDetailsRepository.updatePublicServiceDetails("1", publicService.getPUId());
-            organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(publicService.getPUOfficialConsentId()));
+            PublicServiceDetails publicService = repositoryDependencyContainer.getPublicServiceDetailsRepository().findPublicServiceDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
+            repositoryDependencyContainer.getPublicServiceDetailsRepository().updatePublicServiceDetails("1", publicService.getPUId());
+            organizationDetails = repositoryDependencyContainer.getOrganizationDetailsRepository().getByRequestId(Long.parseLong(publicService.getPUOfficialConsentId()));
         } else if(requestedUser.getUCategory().equals("Affected Victims")) {
-            VictimDetails victim = victimDetailsRepository.findVictimDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
-            victimDetailsRepository.updateVictimDetails("1", victim.getVId());
-            organizationDetails = organizationDetailsRepository.getByRequestId(Long.parseLong(victim.getVOrganizationId()));
+            VictimDetails victim = repositoryDependencyContainer.getVictimDetailsRepository().findVictimDetailsByUIdAndApproveStatus(requestedUser.getUId(), "0");
+            repositoryDependencyContainer.getVictimDetailsRepository().updateVictimDetails("1", victim.getVId());
+            organizationDetails = repositoryDependencyContainer.getOrganizationDetailsRepository().getByRequestId(Long.parseLong(victim.getVOrganizationId()));
         }
 
         // Send transaction from the approver to the requester
         Web3j web3j = Web3j.build(new HttpService("HTTP://127.0.0.1:8545"));
-        Credentials credentials = web3jClient.getCredentialsFromPrivateKey(pmoUser.getUPrivateKey());
-        Pair<Long, String> transactionDetail = web3jClient.transferEthereum(web3j, pmoUser.getUAddress(), credentials, requestedFundDetails.getFAccountAddress(), requestedAmount);
+        Credentials credentials = serviceDependencyContainer.getWeb3jClient().getCredentialsFromPrivateKey(pmoUser.getUPrivateKey());
+        Pair<Long, String> transactionDetail = serviceDependencyContainer.getWeb3jClient().transferEthereum(web3j, pmoUser.getUAddress(), credentials, requestedFundDetails.getFAccountAddress(), requestedAmount);
         approvedAmount = transactionDetail.getFirst();
         transactionHash = transactionDetail.getSecond();
 
         // Updating fund details and user details
         Timestamp timestamp = Timestamp.from(Instant.now());
-        fundingDetailsRepository.updateFundingDetails((approvedAmount * 86508), timestamp, transactionHash, requestedFundDetails.getFAccountAddress(), fId);
-        userRepository.updateApprovedUserFunds(Long.toString(Long.parseLong(requestedUser.getUCurrentOutstandingAmount()) + (approvedAmount * 86508)), requestedUser.getUId());
+        repositoryDependencyContainer.getFundingDetailsRepository().updateFundingDetails((approvedAmount * 86508), timestamp, transactionHash, requestedFundDetails.getFAccountAddress(), fId);
+        repositoryDependencyContainer.getUserRepository().updateApprovedUserFunds(Long.toString(Long.parseLong(requestedUser.getUCurrentOutstandingAmount()) + (approvedAmount * 86508)), requestedUser.getUId());
 
         // Sends the approved amount to a dummy account
         List<String> addresses = AddressPrivateKeyMap.convertKeysToList();
-        Credentials dummyCredentials = web3jClient.getCredentialsFromPrivateKey(AddressPrivateKeyMap.addressKeyPair.get(requestedFundDetails.getFAccountAddress()));
-        web3jClient.transferEthereum(web3j, requestedFundDetails.getFAccountAddress(), dummyCredentials, AddressPrivateKeyMap.DUMMY_ACCOUNT_ADDRESS,  approvedAmount);
+        Credentials dummyCredentials = serviceDependencyContainer.getWeb3jClient().getCredentialsFromPrivateKey(AddressPrivateKeyMap.addressKeyPair.get(requestedFundDetails.getFAccountAddress()));
+        serviceDependencyContainer.getWeb3jClient().transferEthereum(web3j, requestedFundDetails.getFAccountAddress(), dummyCredentials, AddressPrivateKeyMap.DUMMY_ACCOUNT_ADDRESS,  approvedAmount);
 
         // Remove access to the account from the user
-        fundingDetailsRepository.revokeAccountAddress("000", fId);
-        userRepository.updateUserDisableVerification("0", requestedUser.getUId());
+        repositoryDependencyContainer.getFundingDetailsRepository().revokeAccountAddress("000", fId);
+        repositoryDependencyContainer.getUserRepository().updateUserDisableVerification("0", requestedUser.getUId());
 
         // Send a confirmation mail to the requester
-        mailService.sendMail("Fund Approved", requestedFundDetails.getFRequestReason(), Long.toString(requestedAmount * 86508), requestedUser.getUEmail());
+        serviceDependencyContainer.getMailService().sendMail("Fund Approved", requestedFundDetails.getFRequestReason(), Long.toString(requestedAmount * 86508), requestedUser.getUEmail());
 
         // Save to PMO fund history
         PMOFundHistory pmoFundHistory = new PMOFundHistory();
@@ -229,10 +194,10 @@ public class GetResource {
         pmoFundHistory.setPFApprovedFundStatus("1");
         pmoFundHistory.setURequestTimestamp(requestedFundDetails.getFRequestedTimestamp());
         pmoFundHistory.setUApprovedTimestamp(timestamp);
-        pmoFundHistoryRepository.save(pmoFundHistory);
+        repositoryDependencyContainer.getPmoFundHistoryRepository().save(pmoFundHistory);
 
-        userRepository.updateUserFunds(Long.toString(Long.parseLong(web3jClient.getBalance(web3j, pmoUser.getUAddress()))), null, null, pmoUser.getUId());
-        organizationDetailsRepository.updateIsApprovedOrganizationId("1", organizationDetails.getOId());
+        repositoryDependencyContainer.getUserRepository().updateUserFunds(Long.toString(Long.parseLong(serviceDependencyContainer.getWeb3jClient().getBalance(web3j, pmoUser.getUAddress()))), null, null, pmoUser.getUId());
+        repositoryDependencyContainer.getOrganizationDetailsRepository().updateIsApprovedOrganizationId("1", organizationDetails.getOId());
 
         return "redirect:/dashboard";
     }
@@ -245,7 +210,7 @@ public class GetResource {
 
         Map<String, Object> attributes = new HashMap<>();
 
-        User user = userRepository.findByEmail(email);
+        User user = repositoryDependencyContainer.getUserRepository().findByEmail(email);
 
         if(user.getUBankAccountNumber() == null) {
             flag = true;
@@ -270,7 +235,7 @@ public class GetResource {
 
     @GetMapping("/allUsers")
     public String getAllUsers(Model model) {
-        List<User> users = userRepository.findAll();
+        List<User> users = repositoryDependencyContainer.getUserRepository().findAll();
         model.addAttribute("users", users);
         return "users.html";
     }
@@ -281,14 +246,14 @@ public class GetResource {
             redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
             return "redirect:/login";
         }
-        User user = userRepository.findByEmail(loggedMember.getUsername());
+        User user = repositoryDependencyContainer.getUserRepository().findByEmail(loggedMember.getUsername());
         model.addAttribute("user", user);
         return "userprofile.html";
     }
 
     @GetMapping("/account/{uId}")
     public String getUpdateProfile(@AuthenticationPrincipal UserDetail loggedUser, Model model) {
-        User user = userRepository.findByEmail(loggedUser.getUsername());
+        User user = repositoryDependencyContainer.getUserRepository().findByEmail(loggedUser.getUsername());
         model.addAttribute("user", user);
         return "update_profile.html";
     }
@@ -299,12 +264,12 @@ public class GetResource {
             redirectAttributes.addFlashAttribute("warning", "Please login to continue");
             return "redirect:/login";
         }
-        User user = userRepository.findByEmail(loggedUser.getUsername());
+        User user = repositoryDependencyContainer.getUserRepository().findByEmail(loggedUser.getUsername());
         if(user.hasRole("PMO_PTNT")) {
-            List<OrganizationDetails> requestList = organizationDetailsRepository.findAll();
+            List<OrganizationDetails> requestList = repositoryDependencyContainer.getOrganizationDetailsRepository().findAll();
             model.addAttribute("requests", requestList);
         } else {
-            List<OrganizationDetails> requestList = organizationDetailsRepository.getAllByAadhaar(Long.toString(user.getUAadhaar()));
+            List<OrganizationDetails> requestList = repositoryDependencyContainer.getOrganizationDetailsRepository().getAllByAadhaar(Long.toString(user.getUAadhaar()));
             List<OrganizationDetails> currentRequests = new ArrayList<>();
             System.out.println(requestList.get(0).toString());
             for(OrganizationDetails organizationDetails : requestList) {
@@ -319,7 +284,7 @@ public class GetResource {
 
     @GetMapping("/aadhaarDetails")
     public String getAllAadhaarDetails(Model model) {
-        List<AadhaarDetails> aadhaarDetailsList = aadhaarDetailsRepository.findAll();
+        List<AadhaarDetails> aadhaarDetailsList = repositoryDependencyContainer.getAadhaarDetailsRepository().findAll();
         model.addAttribute("users", aadhaarDetailsList);
         return "aadhaar_list.html";
     }
@@ -340,10 +305,10 @@ public class GetResource {
             redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
             return "redirect:/login";
         }
-        model.addAttribute("contributions_lists", contributorDetailsRepository.findAll() );
-//        model.addAttribute("contributions_lists_ptnt", contributorDetailsRepository.findAllByContributionFor("PMO_PTNT"));
-//        model.addAttribute("contributions_lists_pusr", contributorDetailsRepository.findAllByContributionFor("PMO_PUSR"));
-//        model.addAttribute("contributions_lists_vctm", contributorDetailsRepository.findAllByContributionFor("PMO_VCTM"));
+        model.addAttribute("contributions_lists", repositoryDependencyContainer.getContributorDetailsRepository().findAll() );
+//        model.addAttribute("contributions_lists_ptnt", dependencyContainer.getContributorDetailsRepository().findAllByContributionFor("PMO_PTNT"));
+//        model.addAttribute("contributions_lists_pusr", dependencyContainer.getContributorDetailsRepository().findAllByContributionFor("PMO_PUSR"));
+//        model.addAttribute("contributions_lists_vctm", dependencyContainer.getContributorDetailsRepository().findAllByContributionFor("PMO_VCTM"));
         return "all_contributions.html";
     }
 
@@ -353,7 +318,7 @@ public class GetResource {
             redirectAttributes.addFlashAttribute("warning", "Please login to conitue");
             return "redirect:/login";
         }
-        model.addAttribute("fundDetails", fundingDetailsRepository.findAll());
+        model.addAttribute("fundDetails", repositoryDependencyContainer.getFundingDetailsRepository().findAll());
         return "all_approved_funds.html";
     }
 
@@ -364,7 +329,7 @@ public class GetResource {
 
     @GetMapping("/resetPassword")
     public String showResetPassword(@Param(value = "token") String token, Model model, RedirectAttributes redirectAttributes) {
-        User user = userRepository.findUserByResetPasswordToken(token);
+        User user = repositoryDependencyContainer.getUserRepository().findUserByResetPasswordToken(token);
         model.addAttribute("token", token);
         if(user == null) {
             redirectAttributes.addFlashAttribute("warning", "Invalid token");

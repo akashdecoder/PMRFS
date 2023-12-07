@@ -1,8 +1,7 @@
 package com.api.model;
 
 import lombok.*;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;

@@ -1,12 +1,10 @@
 package com.api.controller;
 
+import com.api.dependencycontainer.RepositoryDependencyContainer;
+import com.api.dependencycontainer.ServiceDependencyContainer;
 import com.api.model.AadhaarDetails;
 import com.api.model.IncomeDetails;
 import com.api.model.OrganizationDetails;
-import com.api.repository.AadhaarDetailsRepository;
-import com.api.repository.IncomeDetailsRepository;
-import com.api.repository.OrganizationDetailsRepository;
-import com.api.services.RandomNumberGeneratorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,22 +12,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @Controller
 public class SuperAdminResource {
 
-    @Autowired
-    private AadhaarDetailsRepository aadhaarDetailsRepository;
+    private final RepositoryDependencyContainer repositoryDependencyContainer;
+    private final ServiceDependencyContainer serviceDependencyContainer;
 
     @Autowired
-    private OrganizationDetailsRepository organizationDetailsRepository;
-
-    @Autowired
-    private IncomeDetailsRepository incomeDetailsRepository;
-
-    @Autowired
-    private RandomNumberGeneratorService randomNumberGeneratorService;
+    public SuperAdminResource(RepositoryDependencyContainer repositoryDependencyContainer, ServiceDependencyContainer serviceDependencyContainer) {
+        this.repositoryDependencyContainer = repositoryDependencyContainer;
+        this.serviceDependencyContainer = serviceDependencyContainer;
+    }
 
     @GetMapping("/addAadhaarDetails")
     public String showAadhaarPage(Model model) {
@@ -39,9 +34,9 @@ public class SuperAdminResource {
 
     @PostMapping("/addedAadhaarDetails")
     public String addAadhaarDetails(@Valid AadhaarDetails aadhaarDetails, RedirectAttributes redirectAttributes) {
-        AadhaarDetails aadhaarDetail = aadhaarDetailsRepository.findByAadhaar(aadhaarDetails.getUAadhaar());
+        AadhaarDetails aadhaarDetail = repositoryDependencyContainer.getAadhaarDetailsRepository().findByAadhaar(aadhaarDetails.getUAadhaar());
         if(aadhaarDetail == null) {
-            aadhaarDetailsRepository.save(aadhaarDetails);
+            repositoryDependencyContainer.getAadhaarDetailsRepository().save(aadhaarDetails);
             redirectAttributes.addFlashAttribute("message", "Added Details Successfully");
             return "redirect:/addAadhaarDetails";
         }
@@ -57,10 +52,10 @@ public class SuperAdminResource {
 
     @PostMapping("/addedIncomeDetails")
     public String addIncomeDetails(@Valid IncomeDetails incomeDetails, RedirectAttributes redirectAttributes) {
-        AadhaarDetails aadhaarDetail = aadhaarDetailsRepository.findByAadhaar(incomeDetails.getUAadhaar());
+        AadhaarDetails aadhaarDetail = repositoryDependencyContainer.getAadhaarDetailsRepository().findByAadhaar(incomeDetails.getUAadhaar());
         if(aadhaarDetail != null) {
-            incomeDetails.setIIncomeId(Long.parseLong(randomNumberGeneratorService.generateRandomId()));
-            incomeDetailsRepository.save(incomeDetails);
+            incomeDetails.setIIncomeId(Long.parseLong(serviceDependencyContainer.getRandomNumberGeneratorService().generateRandomId()));
+            repositoryDependencyContainer.getIncomeDetailsRepository().save(incomeDetails);
             redirectAttributes.addFlashAttribute("message", "Added Details Successfully");
             return "redirect:/addIncomeDetails";
         }
@@ -76,11 +71,11 @@ public class SuperAdminResource {
 
     @PostMapping("/addedRequestFundDetails")
     public String addRequestFundDetails(@Valid OrganizationDetails organizationDetails, RedirectAttributes redirectAttributes) {
-        AadhaarDetails aadhaarDetail = aadhaarDetailsRepository.findByAadhaar(organizationDetails.getUAadhaar());
+        AadhaarDetails aadhaarDetail = repositoryDependencyContainer.getAadhaarDetailsRepository().findByAadhaar(organizationDetails.getUAadhaar());
         if(aadhaarDetail != null) {
-            organizationDetails.setORequestId(Long.parseLong(randomNumberGeneratorService.generateRandomId()));
+            organizationDetails.setORequestId(Long.parseLong(serviceDependencyContainer.getRandomNumberGeneratorService().generateRandomId()));
             organizationDetails.setOIsApproved("0");
-            organizationDetailsRepository.save(organizationDetails);
+            repositoryDependencyContainer.getOrganizationDetailsRepository().save(organizationDetails);
             redirectAttributes.addFlashAttribute("message", "Added Details Successfully");
             return "redirect:/addRequestFundDetails";
         }

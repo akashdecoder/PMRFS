@@ -1,6 +1,7 @@
 package com.api.utils;
 
-import javax.servlet.http.HttpServletRequest;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public class Utility {
     public static String getSiteUrl(HttpServletRequest request) {
