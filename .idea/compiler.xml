@@ -7,12 +7,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="webresources" />
+        <module name="dependency-containers" />
         <module name="tests" />
         <module name="service-providers" />
-        <module name="exceptions" />
         <module name="domain" />
         <module name="web3j" />
+        <module name="webresources" />
+        <module name="exceptions" />
+        <module name="microservices" />
       </profile>
       <profile name="Disabled" />
     </annotationProcessing>
@@ -22,14 +24,16 @@
       <module name="security" target="8" />
       <module name="services" target="8" />
       <module name="superadmin" target="11" />
-      <module name="utils" target="8" />
+      <module name="utils" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="contributor" options="-parameters" />
+      <module name="dependency-containers" options="-parameters" />
       <module name="domain" options="-parameters" />
       <module name="exceptions" options="-parameters" />
+      <module name="microservices" options="-parameters" />
       <module name="pmrfs" options="" />
       <module name="pmrfs-module-mvc" options="-parameters" />
       <module name="security" options="-parameters" />

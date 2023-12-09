@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @SpringBootApplication
 @EnableJpaRepositories(basePackages = {"com.api.repository"})
 @EntityScan(basePackages = {"com.api.model"})
-public class App {
+public class MircoServiceApp {
     public static void main(String[] args) {
-        SpringApplication.run(App.class);
+        SpringApplication.run(MircoServiceApp.class);
     }
 }

@@ -61,11 +61,4 @@ public class WebSecurityConfig {
                 ).build();
     }
 
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
-//        authenticationManagerBuilder
-//                .userDetailsService(userDetailsService)
-//                .passwordEncoder(passwordEncoder());
-//    }
-
 }
