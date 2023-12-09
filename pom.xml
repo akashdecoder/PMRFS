@@ -10,7 +10,9 @@
         <module>exceptions</module>
 		<module>service-providers</module>
         <module>tests</module>
-    </modules>
+        <module>dependency-containers</module>
+		<module>microservices</module>
+	</modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>

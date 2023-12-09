@@ -1,7 +1,5 @@
 package com.api;
 
-import com.api.utils.AddressPrivateKeyMap;
-import com.api.validationcontractmodel.PmCare;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.web3j.crypto.CipherException;
 import org.web3j.crypto.Credentials;
@@ -22,7 +20,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 
 

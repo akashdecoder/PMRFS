@@ -2,10 +2,12 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/contributor/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/dependency-containers/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/domain/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/domain/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/exceptions/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mailsystem/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/microservices/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/pmrfs-module-mvc/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/runner/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/security/src/main/java" charset="UTF-8" />
